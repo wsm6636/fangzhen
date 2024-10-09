@@ -152,7 +152,6 @@ executor.add_callback(callback4)
 # 运行执行器
 executor.run(runtime)
 
-
 # 解析输出事件
 events = []
 with open('output.txt', 'r') as file:
@@ -169,33 +168,55 @@ name_to_object[callback3.name] = callback3
 name_to_object[callback4.name] = callback4
 
 # 提取执行时间和标签
-execution_data = {}
+timestamps = {}
 for event in events:
     parts = event.split(" at ")
-    if len(parts) > 1:
+    if len(parts) > 1 and parts[0].strip() in name_to_object:  # 只考虑Timer和Callback的事件
         label = parts[0].strip()
         timestamp = float(parts[1].split("s")[0])
-        if label in name_to_object:  # 忽略非Timer和Callback的事件
-            if label not in execution_data:
-                execution_data[label] = []
-            execution_data[label].append((timestamp, name_to_object[label].execution_time))
+        if label not in timestamps:
+            timestamps[label] = []
+        timestamps[label].append(timestamp)
 
 # 绘制图表
-fig, ax = plt.subplots(figsize=(12, 8))
+fig, ax = plt.subplots(figsize=(12, 8))  # 调整画布大小
 
 # 为每个Timer和Callback分配颜色
-colors = {'Timer1': 'blue', 'Timer2': 'green', 'Timer3': 'red',
-          'Sub1': 'cyan', 'Sub2': 'magenta', 'Sub3': 'yellow', 'Sub4': 'black'}
+colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
+color_map = {timer1.name: colors[0], timer2.name: colors[1], timer3.name: colors[2],
+             callback1.name: colors[3], callback2.name: colors[4], callback3.name: colors[5], callback4.name: colors[6]}
 
 # 绘制每个Timer和Callback的执行时间
-for label, data in execution_data.items():
-    timestamps = [tup[0] for tup in data]
-    durations = [tup[1] for tup in data]
-    ax.barh(label, durations, left=timestamps, color=colors[label], label=label)
+y_positions = {}
+current_y = 0
+labels_displayed = []  # 用于跟踪已显示的标签，避免图例重复
+for label in sorted(name_to_object.keys(), key=lambda x: name_to_object[x].priority, reverse=True):
+    if label in timestamps:
+        execution_time = name_to_object[label].execution_time
+        y_positions[label] = current_y
+        for timestamp in timestamps[label]:
+            ax.broken_barh([(timestamp, execution_time)], (y_positions[label] - execution_time/2, execution_time), facecolors=color_map[label])
+        if label not in labels_displayed:
+            ax.text(runtime + 2, y_positions[label], label, va='center', ha='left', color=color_map[label])
+            labels_displayed.append(label)
+        current_y += 1
 
-ax.set_xlabel('Execution Time (s)')
+# 设置图表的标题和标签
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Operations')
 ax.set_title('Execution Timeline by Task')
-ax.legend()
 
-plt.tight_layout()
+# 显示背景的格线，增加网格线的密集度
+ax.grid(True, which='both', linestyle='-', linewidth='0.5', alpha=0.7)
+ax.xaxis.set_major_locator(plt.MultipleLocator(1))  # 设置x轴主刻度间隔
+ax.yaxis.set_major_locator(plt.MultipleLocator(1))  # 设置y轴主刻度间隔
+
+# 设置横纵轴都从0开始
+ax.set_xlim(0, runtime)
+ax.set_ylim(0, len(name_to_object))
+
+# 保存图片
+plt.savefig('output.png')
+
+# 显示图表
 plt.show()
