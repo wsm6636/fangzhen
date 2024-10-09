@@ -178,6 +178,9 @@ for event in events:
             timestamps[label] = []
         timestamps[label].append(timestamp)
 
+# 提取Polling Points
+pp_timestamps = [float(event.split(" at ")[1].split("s")[0]) for event in events if "Polling point" in event]
+
 # 为每个Timer和Callback分配颜色
 colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
 color_map = {timer1.name: colors[0], timer2.name: colors[1], timer3.name: colors[2],
@@ -198,6 +201,12 @@ for label in label_names:
             ax.broken_barh([(timestamp, execution_time)], (y_positions[label], 0.5), facecolors=color_map[label])  # 设置高度为0.5
     current_y += 1
 
+
+# 在每个Polling Point画一条竖线，并标注
+for pp_time in pp_timestamps:
+    ax.axvline(x=pp_time, color='grey', linestyle='--', linewidth=1)  # 画竖线
+    ax.text(pp_time, current_y + 0.5, '', va='bottom', ha='center', color='grey', fontsize=9)  # 标注PP
+
 # 设置图表的标题和标签
 ax.set_xlabel('Time (s)')
 ax.set_ylabel('Operations')
@@ -211,7 +220,7 @@ ax.set_yticklabels(y_labels)
 
 # 显示背景的格线，增加网格线的密集度
 ax.grid(True, which='both', linestyle='-', linewidth='0.5', alpha=0.7)
-ax.xaxis.set_major_locator(plt.MultipleLocator(2))  # 设置x轴主刻度间隔为5秒
+ax.xaxis.set_major_locator(plt.MultipleLocator(1))  # 设置x轴主刻度间隔为5秒
 ax.yaxis.set_major_locator(plt.MultipleLocator(1))  # 设置y轴主刻度间隔为1
 
 # 设置横纵轴的范围
@@ -220,6 +229,7 @@ ax.set_ylim(0, current_y)
 
 # 设置横轴刻度标签的显示格式
 ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: f'{int(val)}'))
+ax.tick_params(axis='x', labelsize='small')  # 设置横轴刻度标签的字体大小
 
 # 保存图片
 plt.savefig('output.png')
