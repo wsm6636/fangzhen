@@ -29,6 +29,7 @@ class Timer:
         self.output_manager.write(f"{self.name} at {current_time}s")
         # print(f"Timer {self.name} executed at {current_time}s")
         current_time += self.execution_time
+        current_time = round(current_time, 2)
         self.next_execution_time += self.period  # 更新下一个执行时间
         self.buffer = self.subcallback  # 更新buffer为最新的回调
 
@@ -53,6 +54,7 @@ class Callback:
         self.output_manager.write(f"{self.name} at {current_time}s")
         # print(f"Callback {self.name} executed at {current_time}s")
         current_time += self.execution_time
+        current_time = round(current_time, 2)
         if self.triggers_new is True:
             self.buffer = self.subcallback
 
@@ -113,9 +115,10 @@ class Executor:
                         self.readyset.append(callback.buffer)
                         callback.buffer = None
                 if not self.readyset:
-                    current_time = self.get_next_timer_time(current_time)
+                    current_time = self.get_next_timer_time()
+                    current_time = round(current_time, 2)
                     
-    def get_next_timer_time(self, current_time):
+    def get_next_timer_time(self):
         # 找到下一个就绪的定时器时间
         next_times = [t.next_execution_time for t in self.timers]
         if next_times:
@@ -134,14 +137,14 @@ output_manager = OutputManager('output.txt')
 # 创建执行器实例
 executor = Executor(output_manager)
 
-timer1 = Timer("Timer1", 3, 0.2, 1, output_manager)
-timer2 = Timer("Timer2", 8, 0.2, 2, output_manager)
-timer3 = Timer("Timer3", 8, 0.2, 3, output_manager)
+timer1 = Timer("Timer1", 3, 0.1, 1, output_manager)
+timer2 = Timer("Timer2", 8, 0.1, 2, output_manager)
+timer3 = Timer("Timer3", 8, 0.1, 3, output_manager)
 
-callback1 = Callback("Sub1", 0.5, 4, output_manager, triggers_new=False)
-callback2 = Callback("Sub2", 0.5, 5, output_manager, triggers_new=False)
-callback3 = Callback("Sub3", 0.5, 6, output_manager, triggers_new=True)
-callback4 = Callback("Sub4", 0.5, 7, output_manager, triggers_new=False)
+callback1 = Callback("Sub1", 0.2, 4, output_manager, triggers_new=False)
+callback2 = Callback("Sub2", 0.2, 5, output_manager, triggers_new=False)
+callback3 = Callback("Sub3", 0.2, 6, output_manager, triggers_new=True)
+callback4 = Callback("Sub4", 0.2, 7, output_manager, triggers_new=False)
 
 timer1.subcallback = callback1
 timer2.subcallback = callback2
@@ -201,7 +204,7 @@ for label, times in timestamps.items():
 
 # 在每个 Polling Point 画一条竖线，并标注
 for pp_time in pp_timestamps:
-    ax.axvline(x=pp_time, color='grey', linestyle='--', linewidth=1)  # 画竖线
+    ax.axvline(x=pp_time, color='grey', linestyle='--', linewidth=0.5)  # 画竖线
     # ax.text(pp_time, max(y_positions.values()) + 1, 'PP', va='bottom', ha='center', color='grey', fontsize=9)  # 标注PP
 
 # 设置图表的标题和标签
@@ -215,7 +218,13 @@ ax.set_yticklabels(list(y_positions.keys()))
 
 # 显示背景的格线，增加网格线的密集度
 ax.grid(True, which='both', linestyle='-', linewidth='0.5', alpha=0.7)
-ax.xaxis.set_major_locator(plt.MultipleLocator(1))  # 设置x轴主刻度间隔为5秒
+# ax.xaxis.set_major_locator(plt.MultipleLocator(1))  # 设置x轴主刻度间隔为5秒
+
+min_period = min(timer.period for timer in executor.timers)
+# 设置x轴的刻度为最小周期的倍数，这里我们以最小周期为1个单位
+ax.set_xticks([i * min_period for i in range(1, runtime // min_period + 1)])
+# 设置x轴的刻度标签为最小周期的倍数
+ax.set_xticklabels([str(i * min_period) for i in range(1, runtime // min_period + 1)])
 
 # 设置横纵轴的范围
 ax.set_xlim(0, runtime)
