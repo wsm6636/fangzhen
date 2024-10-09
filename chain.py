@@ -178,28 +178,31 @@ for event in events:
             timestamps[label] = []
         timestamps[label].append(timestamp)
 
-# 绘制图表
-fig, ax = plt.subplots(figsize=(12, 8))  # 调整画布大小
-
 # 为每个Timer和Callback分配颜色
 colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
 color_map = {timer1.name: colors[0], timer2.name: colors[1], timer3.name: colors[2],
              callback1.name: colors[3], callback2.name: colors[4], callback3.name: colors[5], callback4.name: colors[6]}
 
+# 绘制图表
+fig, ax = plt.subplots(figsize=(12, 8))  # 调整画布大小
+
+# 准备用于图例显示的标签列表
+labels_displayed = []
+
 # 绘制每个Timer和Callback的执行时间
 y_positions = {}
 current_y = 0
-labels_displayed = []  # 用于跟踪已显示的标签，避免图例重复
-for label in sorted(name_to_object.keys(), key=lambda x: name_to_object[x].priority, reverse=True):
+label_names = sorted(name_to_object.keys(), key=lambda x: name_to_object[x].priority, reverse=True)
+for label in label_names:
+    y_positions[label] = current_y
     if label in timestamps:
         execution_time = name_to_object[label].execution_time
-        y_positions[label] = current_y
         for timestamp in timestamps[label]:
-            ax.broken_barh([(timestamp, execution_time)], (y_positions[label] - execution_time/2, execution_time), facecolors=color_map[label])
+            ax.broken_barh([(timestamp, execution_time)], (y_positions[label], 0.5), facecolors=color_map[label])  # 设置高度为0.5
         if label not in labels_displayed:
-            ax.text(runtime + 2, y_positions[label], label, va='center', ha='left', color=color_map[label])
             labels_displayed.append(label)
-        current_y += 1
+            ax.text(0, y_positions[label], label, va='center', ha='left', color=color_map[label], fontsize=8)
+    current_y += 1
 
 # 设置图表的标题和标签
 ax.set_xlabel('Time (s)')
@@ -208,12 +211,12 @@ ax.set_title('Execution Timeline by Task')
 
 # 显示背景的格线，增加网格线的密集度
 ax.grid(True, which='both', linestyle='-', linewidth='0.5', alpha=0.7)
-ax.xaxis.set_major_locator(plt.MultipleLocator(1))  # 设置x轴主刻度间隔
+ax.xaxis.set_major_locator(plt.MultipleLocator(5))  # 设置x轴主刻度间隔
 ax.yaxis.set_major_locator(plt.MultipleLocator(1))  # 设置y轴主刻度间隔
 
 # 设置横纵轴都从0开始
 ax.set_xlim(0, runtime)
-ax.set_ylim(0, len(name_to_object))
+ax.set_ylim(0, current_y + 1)
 
 # 保存图片
 plt.savefig('output.png')
