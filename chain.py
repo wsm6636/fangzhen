@@ -186,9 +186,6 @@ color_map = {timer1.name: colors[0], timer2.name: colors[1], timer3.name: colors
 # 绘制图表
 fig, ax = plt.subplots(figsize=(12, 8))  # 调整画布大小
 
-# 准备用于图例显示的标签列表
-labels_displayed = []
-
 # 绘制每个Timer和Callback的执行时间
 y_positions = {}
 current_y = 0
@@ -199,9 +196,6 @@ for label in label_names:
         execution_time = name_to_object[label].execution_time
         for timestamp in timestamps[label]:
             ax.broken_barh([(timestamp, execution_time)], (y_positions[label], 0.5), facecolors=color_map[label])  # 设置高度为0.5
-        if label not in labels_displayed:
-            labels_displayed.append(label)
-            ax.text(0, y_positions[label], label, va='center', ha='left', color=color_map[label], fontsize=8)
     current_y += 1
 
 # 设置图表的标题和标签
@@ -209,14 +203,23 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel('Operations')
 ax.set_title('Execution Timeline by Task')
 
+# 自定义纵轴刻度标签
+y_ticks = list(y_positions.values())
+y_labels = list(y_positions.keys())
+ax.set_yticks(y_ticks)
+ax.set_yticklabels(y_labels)
+
 # 显示背景的格线，增加网格线的密集度
 ax.grid(True, which='both', linestyle='-', linewidth='0.5', alpha=0.7)
-ax.xaxis.set_major_locator(plt.MultipleLocator(5))  # 设置x轴主刻度间隔
-ax.yaxis.set_major_locator(plt.MultipleLocator(1))  # 设置y轴主刻度间隔
+ax.xaxis.set_major_locator(plt.MultipleLocator(2))  # 设置x轴主刻度间隔为5秒
+ax.yaxis.set_major_locator(plt.MultipleLocator(1))  # 设置y轴主刻度间隔为1
 
-# 设置横纵轴都从0开始
+# 设置横纵轴的范围
 ax.set_xlim(0, runtime)
-ax.set_ylim(0, current_y + 1)
+ax.set_ylim(0, current_y)
+
+# 设置横轴刻度标签的显示格式
+ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: f'{int(val)}'))
 
 # 保存图片
 plt.savefig('output.png')
