@@ -152,60 +152,46 @@ executor.add_callback(callback4)
 # 运行执行器
 executor.run(runtime)
 
-# 解析输出事件
-events = []
-with open('output.txt', 'r') as file:
-    events = file.readlines()
+# 从 Executor 实例中获取 Timer 和 Callback 列表
+all_objects = executor.timers + executor.callbacks
 
-# 创建一个映射，将Timer和Callback的名称映射到它们的对象实例
-name_to_object = {}
-name_to_object[timer1.name] = timer1
-name_to_object[timer2.name] = timer2
-name_to_object[timer3.name] = timer3
-name_to_object[callback1.name] = callback1
-name_to_object[callback2.name] = callback2
-name_to_object[callback3.name] = callback3
-name_to_object[callback4.name] = callback4
+# 创建一个映射，将 Timer 和 Callback 的名称映射到它们的对象实例
+name_to_object = {obj.name: obj for obj in all_objects}
 
-# 提取执行时间和标签
-timestamps = {}
-for event in events:
-    parts = event.split(" at ")
-    if len(parts) > 1 and parts[0].strip() in name_to_object:  # 只考虑Timer和Callback的事件
-        label = parts[0].strip()
-        timestamp = float(parts[1].split("s")[0])
-        if label not in timestamps:
-            timestamps[label] = []
-        timestamps[label].append(timestamp)
-
-# 提取Polling Points
-pp_timestamps = [float(event.split(" at ")[1].split("s")[0]) for event in events if "Polling point" in event]
-
-# 为每个Timer和Callback分配颜色
+# 为每个对象分配颜色
 colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black']
-color_map = {timer1.name: colors[0], timer2.name: colors[1], timer3.name: colors[2],
-             callback1.name: colors[3], callback2.name: colors[4], callback3.name: colors[5], callback4.name: colors[6]}
+color_map = {obj.name: colors[i % len(colors)] for i, obj in enumerate(all_objects)}
+
+# 解析事件并记录每个 Timer 和 Callback 的执行时间点
+timestamps = {obj.name: [] for obj in all_objects}
+pp_timestamps = []  # 提取 Polling Points 的时间
+
+with open('output.txt', 'r') as file:
+    for line in file:
+        parts = line.split(" at ")
+        if len(parts) > 1:
+            label = parts[0].strip()
+            timestamp = float(parts[1].split("s")[0])
+            if label in name_to_object:
+                timestamps[label].append(timestamp)
+            elif "Polling point" in line:
+                pp_timestamps.append(timestamp)
 
 # 绘制图表
-fig, ax = plt.subplots(figsize=(12, 8))  # 调整画布大小
+fig, ax = plt.subplots(figsize=(12, 8))
 
-# 绘制每个Timer和Callback的执行时间
-y_positions = {}
-current_y = 0
-label_names = sorted(name_to_object.keys(), key=lambda x: name_to_object[x].priority, reverse=True)
-for label in label_names:
-    y_positions[label] = current_y
-    if label in timestamps:
+# 绘制每个 Timer 和 Callback 的执行时间
+y_positions = {obj.name: i for i, obj in enumerate(all_objects)}
+for label, times in timestamps.items():
+    if times:
         execution_time = name_to_object[label].execution_time
-        for timestamp in timestamps[label]:
-            ax.broken_barh([(timestamp, execution_time)], (y_positions[label], 0.5), facecolors=color_map[label])  # 设置高度为0.5
-    current_y += 1
+        for timestamp in times:
+            ax.broken_barh([(timestamp, execution_time)], (y_positions[label], 0.5), facecolors=color_map[label])
 
-
-# 在每个Polling Point画一条竖线，并标注
+# 在每个 Polling Point 画一条竖线，并标注
 for pp_time in pp_timestamps:
     ax.axvline(x=pp_time, color='grey', linestyle='--', linewidth=1)  # 画竖线
-    ax.text(pp_time, current_y + 0.5, '', va='bottom', ha='center', color='grey', fontsize=9)  # 标注PP
+    ax.text(pp_time, max(y_positions.values()) + 1, 'PP', va='bottom', ha='center', color='grey', fontsize=9)  # 标注PP
 
 # 设置图表的标题和标签
 ax.set_xlabel('Time (s)')
@@ -213,22 +199,19 @@ ax.set_ylabel('Operations')
 ax.set_title('Execution Timeline by Task')
 
 # 自定义纵轴刻度标签
-y_ticks = list(y_positions.values())
-y_labels = list(y_positions.keys())
-ax.set_yticks(y_ticks)
-ax.set_yticklabels(y_labels)
+ax.set_yticks(range(len(all_objects)))
+ax.set_yticklabels(list(y_positions.keys()))
 
 # 显示背景的格线，增加网格线的密集度
 ax.grid(True, which='both', linestyle='-', linewidth='0.5', alpha=0.7)
-ax.xaxis.set_major_locator(plt.MultipleLocator(1))  # 设置x轴主刻度间隔为5秒
-ax.yaxis.set_major_locator(plt.MultipleLocator(1))  # 设置y轴主刻度间隔为1
+ax.xaxis.set_major_locator(plt.MultipleLocator(5))  # 设置x轴主刻度间隔为5秒
 
 # 设置横纵轴的范围
+runtime = 60  # 假设 runtime 是 60 秒
 ax.set_xlim(0, runtime)
-ax.set_ylim(0, current_y)
+ax.set_ylim(-1, len(all_objects))
 
-# 设置横轴刻度标签的显示格式
-ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: f'{int(val)}'))
+# 设置横轴刻度标签的显示格式和字体大小
 ax.tick_params(axis='x', labelsize='small')  # 设置横轴刻度标签的字体大小
 
 # 保存图片
