@@ -1,10 +1,12 @@
 import matplotlib.pyplot as plt
-
+import os
 class OutputManager:
     def __init__(self, filename):
         self.filename = filename
         self.events = []  # 用于存储输出事件
-
+        if os.path.exists(self.filename):
+            # 如果文件存在，删除它
+            os.remove(self.filename)
     def write(self, message):
         with open(self.filename, 'a') as file:
             file.write(message + '\n')
@@ -110,7 +112,16 @@ class Executor:
                     if callback.buffer:
                         self.readyset.append(callback.buffer)
                         callback.buffer = None
-
+                if not self.readyset:
+                    current_time = self.get_next_timer_time(current_time)
+                    
+    def get_next_timer_time(self, current_time):
+        # 找到下一个就绪的定时器时间
+        next_times = [t.next_execution_time for t in self.timers]
+        if next_times:
+            return min(next_times)
+        # else:
+            # return current_time  # 如果没有更多的定时器，保持当前时间
 
 # 全局变量，用于跟踪当前时间
 global current_time
@@ -123,14 +134,14 @@ output_manager = OutputManager('output.txt')
 # 创建执行器实例
 executor = Executor(output_manager)
 
-timer1 = Timer("Timer1", 5, 1, 1, output_manager)
-timer2 = Timer("Timer2", 5, 1, 2, output_manager)
-timer3 = Timer("Timer3", 10, 1, 3, output_manager)
+timer1 = Timer("Timer1", 3, 0.2, 1, output_manager)
+timer2 = Timer("Timer2", 8, 0.2, 2, output_manager)
+timer3 = Timer("Timer3", 8, 0.2, 3, output_manager)
 
-callback1 = Callback("Sub1", 1, 4, output_manager, triggers_new=False)
-callback2 = Callback("Sub2", 1, 5, output_manager, triggers_new=False)
-callback3 = Callback("Sub3", 1, 6, output_manager, triggers_new=True)
-callback4 = Callback("Sub4", 1, 7, output_manager, triggers_new=False)
+callback1 = Callback("Sub1", 0.5, 4, output_manager, triggers_new=False)
+callback2 = Callback("Sub2", 0.5, 5, output_manager, triggers_new=False)
+callback3 = Callback("Sub3", 0.5, 6, output_manager, triggers_new=True)
+callback4 = Callback("Sub4", 0.5, 7, output_manager, triggers_new=False)
 
 timer1.subcallback = callback1
 timer2.subcallback = callback2
@@ -191,7 +202,7 @@ for label, times in timestamps.items():
 # 在每个 Polling Point 画一条竖线，并标注
 for pp_time in pp_timestamps:
     ax.axvline(x=pp_time, color='grey', linestyle='--', linewidth=1)  # 画竖线
-    ax.text(pp_time, max(y_positions.values()) + 1, 'PP', va='bottom', ha='center', color='grey', fontsize=9)  # 标注PP
+    # ax.text(pp_time, max(y_positions.values()) + 1, 'PP', va='bottom', ha='center', color='grey', fontsize=9)  # 标注PP
 
 # 设置图表的标题和标签
 ax.set_xlabel('Time (s)')
@@ -204,10 +215,9 @@ ax.set_yticklabels(list(y_positions.keys()))
 
 # 显示背景的格线，增加网格线的密集度
 ax.grid(True, which='both', linestyle='-', linewidth='0.5', alpha=0.7)
-ax.xaxis.set_major_locator(plt.MultipleLocator(5))  # 设置x轴主刻度间隔为5秒
+ax.xaxis.set_major_locator(plt.MultipleLocator(1))  # 设置x轴主刻度间隔为5秒
 
 # 设置横纵轴的范围
-runtime = 60  # 假设 runtime 是 60 秒
 ax.set_xlim(0, runtime)
 ax.set_ylim(-1, len(all_objects))
 
