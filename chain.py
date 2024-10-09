@@ -1,11 +1,15 @@
+import matplotlib.pyplot as plt
+
 class OutputManager:
     def __init__(self, filename):
         self.filename = filename
+        self.events = []  # 用于存储输出事件
 
     def write(self, message):
         with open(self.filename, 'a') as file:
             file.write(message + '\n')
         print(message)  # 同时打印到屏幕
+        self.events.append(message)  # 将事件添加到列表中
 
 class Timer:
     def __init__(self, name, period, execution_time, priority, output_manager):
@@ -20,7 +24,7 @@ class Timer:
 
     def execute(self):
         global current_time
-        self.output_manager.write(f"Timer {self.name} executed at {current_time}s")
+        self.output_manager.write(f"{self.name} at {current_time}s")
         # print(f"Timer {self.name} executed at {current_time}s")
         current_time += self.execution_time
         self.next_execution_time += self.period  # 更新下一个执行时间
@@ -44,7 +48,7 @@ class Callback:
 
     def execute(self):
         global current_time
-        self.output_manager.write(f"Callback {self.name} executed at {current_time}s")
+        self.output_manager.write(f"{self.name} at {current_time}s")
         # print(f"Callback {self.name} executed at {current_time}s")
         current_time += self.execution_time
         if self.triggers_new is True:
@@ -95,7 +99,7 @@ class Executor:
             if not ready_timers and not self.readyset:
                 # 更新轮询点时间
                 pp += 1
-                self.output_manager.write(f"Polling point at {current_time}s")
+                self.output_manager.write(f"Polling point {pp} at {current_time}s")
                 # print(f"Polling point {pp} at {current_time}s")
                 # 将所有定时器的buffer中的回调放入readyset，并清空buffer
                 for timer in self.timers:
@@ -147,3 +151,51 @@ executor.add_callback(callback4)
 
 # 运行执行器
 executor.run(runtime)
+
+
+# 解析输出事件
+events = []
+with open('output.txt', 'r') as file:
+    events = file.readlines()
+
+# 创建一个映射，将Timer和Callback的名称映射到它们的对象实例
+name_to_object = {}
+name_to_object[timer1.name] = timer1
+name_to_object[timer2.name] = timer2
+name_to_object[timer3.name] = timer3
+name_to_object[callback1.name] = callback1
+name_to_object[callback2.name] = callback2
+name_to_object[callback3.name] = callback3
+name_to_object[callback4.name] = callback4
+
+# 提取执行时间和标签
+execution_data = {}
+for event in events:
+    parts = event.split(" at ")
+    if len(parts) > 1:
+        label = parts[0].strip()
+        timestamp = float(parts[1].split("s")[0])
+        if label in name_to_object:  # 忽略非Timer和Callback的事件
+            if label not in execution_data:
+                execution_data[label] = []
+            execution_data[label].append((timestamp, name_to_object[label].execution_time))
+
+# 绘制图表
+fig, ax = plt.subplots(figsize=(12, 8))
+
+# 为每个Timer和Callback分配颜色
+colors = {'Timer1': 'blue', 'Timer2': 'green', 'Timer3': 'red',
+          'Sub1': 'cyan', 'Sub2': 'magenta', 'Sub3': 'yellow', 'Sub4': 'black'}
+
+# 绘制每个Timer和Callback的执行时间
+for label, data in execution_data.items():
+    timestamps = [tup[0] for tup in data]
+    durations = [tup[1] for tup in data]
+    ax.barh(label, durations, left=timestamps, color=colors[label], label=label)
+
+ax.set_xlabel('Execution Time (s)')
+ax.set_title('Execution Timeline by Task')
+ax.legend()
+
+plt.tight_layout()
+plt.show()
