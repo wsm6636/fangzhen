@@ -1,5 +1,14 @@
+class OutputManager:
+    def __init__(self, filename):
+        self.filename = filename
+
+    def write(self, message):
+        with open(self.filename, 'a') as file:
+            file.write(message + '\n')
+        print(message)  # 同时打印到屏幕
+
 class Timer:
-    def __init__(self, name, period, execution_time, priority):
+    def __init__(self, name, period, execution_time, priority, output_manager):
         self.name = name
         self.period = period
         self.execution_time = execution_time
@@ -7,10 +16,12 @@ class Timer:
         self.next_execution_time = 0  # 初始时间为周期后
         self.subcallback = None
         self.buffer = None  # 为定时器创建一个buffer，大小为1
+        self.output_manager = output_manager
 
     def execute(self):
         global current_time
-        print(f"Timer {self.name} executed at {current_time}s")
+        self.output_manager.write(f"Timer {self.name} executed at {current_time}s")
+        # print(f"Timer {self.name} executed at {current_time}s")
         current_time += self.execution_time
         self.next_execution_time += self.period  # 更新下一个执行时间
         self.buffer = self.subcallback  # 更新buffer为最新的回调
@@ -22,17 +33,19 @@ class Timer:
         return self.priority < other.priority
 
 class Callback:
-    def __init__(self, name, execution_time, priority, triggers_new):
+    def __init__(self, name, execution_time, priority, output_manager, triggers_new):
         self.name = name
         self.execution_time = execution_time
         self.priority = priority
         self.subcallback = None
         self.buffer = None  # 为定时器创建一个buffer，大小为1
         self.triggers_new = triggers_new
+        self.output_manager = output_manager
 
     def execute(self):
         global current_time
-        print(f"Callback {self.name} executed at {current_time}s")
+        self.output_manager.write(f"Callback {self.name} executed at {current_time}s")
+        # print(f"Callback {self.name} executed at {current_time}s")
         current_time += self.execution_time
         if self.triggers_new is True:
             self.buffer = self.subcallback
@@ -41,10 +54,11 @@ class Callback:
         return self.priority < other.priority
 
 class Executor:
-    def __init__(self):
+    def __init__(self, output_manager):
         self.timers = []
         self.readyset = []
         self.callbacks = []
+        self.output_manager = output_manager
 
     def add_timer(self, timer):
         self.timers.append(timer)
@@ -81,7 +95,8 @@ class Executor:
             if not ready_timers and not self.readyset:
                 # 更新轮询点时间
                 pp += 1
-                print(f"Polling point {pp} at {current_time}s")
+                self.output_manager.write(f"Polling point at {current_time}s")
+                # print(f"Polling point {pp} at {current_time}s")
                 # 将所有定时器的buffer中的回调放入readyset，并清空buffer
                 for timer in self.timers:
                     if timer.buffer:
@@ -99,17 +114,19 @@ current_time = 0
 
 runtime = 60
 
+output_manager = OutputManager('output.txt')
+
 # 创建执行器实例
-executor = Executor()
+executor = Executor(output_manager)
 
-timer1 = Timer("Timer1", 5, 1, 1)
-timer2 = Timer("Timer2", 5, 1, 2)
-timer3 = Timer("Timer3", 10, 1, 3)
+timer1 = Timer("Timer1", 5, 1, 1, output_manager)
+timer2 = Timer("Timer2", 5, 1, 2, output_manager)
+timer3 = Timer("Timer3", 10, 1, 3, output_manager)
 
-callback1 = Callback("Sub1", 1, 4, triggers_new=False)
-callback2 = Callback("Sub2", 1, 5, triggers_new=False)
-callback3 = Callback("Sub3", 1, 6, triggers_new=True)
-callback4 = Callback("Sub4", 1, 7, triggers_new=False)
+callback1 = Callback("Sub1", 1, 4, output_manager, triggers_new=False)
+callback2 = Callback("Sub2", 1, 5, output_manager, triggers_new=False)
+callback3 = Callback("Sub3", 1, 6, output_manager, triggers_new=True)
+callback4 = Callback("Sub4", 1, 7, output_manager, triggers_new=False)
 
 timer1.subcallback = callback1
 timer2.subcallback = callback2
