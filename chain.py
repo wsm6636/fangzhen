@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import os
 import random
+import networkx as nx
+
 class OutputManager:
     def __init__(self, filename):
         self.filename = filename
@@ -24,16 +26,20 @@ class Timer:
         self.subcallback = None
         self.buffer = None  # 为定时器创建一个buffer，大小为1
         self.output_manager = output_manager
+        self.read_times = []
+        self.write_times = []
         print(f"Created Timer '{self.name}' with period {self.period}, priority {self.priority}, and execution time {self.execution_time}")  # 打印信息
 
     def execute(self):
         global current_time
+        self.read_times.append(current_time)
         self.output_manager.write(f"{self.name} at {current_time}s")
         # print(f"Timer {self.name} executed at {current_time}s")
         current_time += self.execution_time
         current_time = round(current_time, 2)
         self.next_execution_time += self.period  # 更新下一个执行时间
         self.buffer = self.subcallback  # 更新buffer为最新的回调
+        self.write_times.append(current_time)
 
     def is_ready(self, current_time):
         return current_time >= self.next_execution_time
@@ -51,15 +57,20 @@ class Callback:
         self.triggers_new = triggers_new
         self.output_manager = output_manager
         print(f"Created Callback '{self.name}' with priority {self.priority}, and execution time {self.execution_time}")  # 打印信息
+        self.read_times = []
+        self.write_times = []
+        
 
     def execute(self):
         global current_time
+        self.read_times.append(current_time)
         self.output_manager.write(f"{self.name} at {current_time}s")
         # print(f"Callback {self.name} executed at {current_time}s")
         current_time += self.execution_time
         current_time = round(current_time, 2)
         if self.triggers_new is True:
             self.buffer = self.subcallback
+        self.write_times.append(current_time)
 
     def __lt__(self, other):
         return self.priority < other.priority
@@ -129,12 +140,71 @@ class Executor:
             return min(next_times)
         # else:
             # return current_time  # 如果没有更多的定时器，保持当前时间
+class Statistics:
+    #平均值
+    @staticmethod
+    def calculate_average(values):
+        avg = sum(values) / len(values) if values else 0
+        return round(avg, 3)
+    #方差
+    @staticmethod
+    def calculate_variance(values):
+        var = sum((x - (sum(values) / len(values))) ** 2 for x in values) / len(values) if values else 0        
+        return round(var, 3)
+    #差值
+    @staticmethod
+    def calculate_time_difference(start_time, end_time):
+        return end_time - start_time
+    #相邻任务对间隔
+    @staticmethod
+    def calculate_intervals(times):
+        """
+        计算时间列表中前后两两元素的间隔。
+        :param times: 时间列表。
+        :return: 时间间隔列表。
+        """
+        return [Statistics.calculate_time_difference(times[i], times[i+1]) for i in range(len(times) - 1)]
+    @staticmethod
+    def calculate_timer_theory_time(timers):
+        """
+        计算Timer的理论时间。
+        :param timers: Timer对象列表。
+        :return: 理论时间列表。
+        """
+        timer_theory_times = []
+        for timer in timers:
+            # 假设Timer连续触发，计算理论触发时间点
+            theory_time = 0
+            while theory_time <= Statistics.calculate_average([timer.period for timer in timers]):
+                timer_theory_times.append(theory_time)
+                theory_time += timer.period
+        return timer_theory_times
+
+    @staticmethod
+    def calculate_callback_theory_time(callbacks, timers):
+        """
+        计算Callback的理论时间。
+        :param callbacks: Callback对象列表。
+        :param timers: Timer对象列表，用于获取触发此Callback的任务的优先级。
+        :return: 理论时间列表。
+        """
+        callback_theory_times = []
+        for callback in callbacks:
+            # 获取触发此Callback的任务的Timer
+            triggering_timer = next((timer for timer in timers if timer.subcallback == callback), None)
+            if triggering_timer:
+                # 假设Callback在触发它的Timer的理论时间点之后立即执行
+                theory_time = 0
+                while theory_time <= Statistics.calculate_average([triggering_timer.period for timer in timers if timer.subcallback == callback]):
+                    callback_theory_times.append(theory_time)
+                    theory_time += triggering_timer.period + callback.execution_time
+        return callback_theory_times
 
 # 全局变量，用于跟踪当前时间
 global current_time
 current_time = 0
 
-runtime = 120
+runtime = 60
 
 output_manager = OutputManager('output.txt')
 
@@ -195,6 +265,47 @@ with open('output.txt', 'r') as file:
             elif "Polling point" in line:
                 pp_timestamps.append(timestamp)
 
+
+# 按优先级排序
+all_objects.sort()
+# for timer in timers:
+#     read_intervals = Statistics.calculate_intervals(timer.read_times)
+#     write_intervals = Statistics.calculate_intervals(timer.write_times)
+#     print(f"Timer {timer.name} Read Intervals: {read_intervals}")
+#     print(f"Timer {timer.name} Write Intervals: {write_intervals}")
+
+# for callback in callbacks:
+#     read_intervals = Statistics.calculate_intervals(callback.read_times)
+#     write_intervals = Statistics.calculate_intervals(callback.write_times)
+#     print(f"Callback {callback.name} Read Intervals: {read_intervals}")
+#     print(f"Callback {callback.name} Write Intervals: {write_intervals}")
+
+# 写入文件
+with open('read_write_times.txt', 'w') as file:
+    file.write(f"### info ###\n")
+    for obj in executor.timers:
+        file.write(f"{obj.name}: T={obj.period}, P={obj.priority}, E={obj.execution_time} \n")
+    for obj in executor.callbacks:
+        file.write(f"{obj.name}: P={obj.priority}, E={obj.execution_time}\n")
+    file.write(f"\n### read & write time ###\n")
+    for obj in all_objects:
+        file.write(f"\n### {obj.name} ###\n")
+        file.write("read  time: " + " ".join(f"{t:.1f}" for t in obj.read_times) + "\n")
+        file.write("write time: " + " ".join(f"{t:.1f}" for t in obj.write_times) + "\n")
+
+        file.write(f"\nread  time: AVG = {Statistics.calculate_average(obj.read_times)}, VAR = {Statistics.calculate_variance(obj.read_times)}\n")
+        file.write(f"write time: AVG = {Statistics.calculate_average(obj.write_times)}, VAR = {Statistics.calculate_variance(obj.write_times)}\n")
+        
+        read_intervals = Statistics.calculate_intervals(obj.read_times)
+        write_intervals = Statistics.calculate_intervals(obj.write_times)
+        file.write("\nRead  Intervals: ")
+        file.write(" ".join(f"{i:.1f}" for i in read_intervals) + "\n")
+        
+        file.write("Write Intervals: ")
+        file.write(" ".join(f"{i:.1f}" for i in write_intervals) + "\n")
+
+
+
 # 绘制图表
 fig, ax = plt.subplots(figsize=(12, 8))
 fig.subplots_adjust(bottom=0.2)  # 调整底部空间
@@ -243,8 +354,9 @@ for obj in executor.timers:
     info_text += f"{obj.name}: T={obj.period}, P={obj.priority}, E={obj.execution_time}\n"
 for obj in executor.callbacks:
     info_text += f"{obj.name}: P={obj.priority}, E={obj.execution_time}\n"
-# ax.text(runtime - 10, -0.5, info_text, va='top', ha='right', color='black', fontsize=8)
 ax.text(0, -1.5, info_text, va='top', ha='left', color='black', fontsize=8)
+
+
 
 # 保存图片
 plt.savefig('output.png')

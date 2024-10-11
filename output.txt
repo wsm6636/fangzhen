@@ -1,372 +1,184 @@
 Timer1 at 0s
-Timer2 at 0.2s
-Timer3 at 0.4s
-Polling point 1 at 0.8s
-Sub1 at 0.8s
-Sub2 at 1.2s
-Sub3 at 1.6s
-Polling point 2 at 1.8s
-Sub4 at 1.8s
-Polling point 3 at 2.2s
+Timer2 at 0.5s
+Timer3 at 1.0s
+Polling point 1 at 1.4s
+Sub1 at 1.4s
+Sub2 at 1.5s
+Sub3 at 2.0s
+Polling point 2 at 2.2s
+Sub4 at 2.2s
+Polling point 3 at 2.4s
 Timer1 at 3s
-Polling point 4 at 3.2s
-Sub1 at 3.2s
+Polling point 4 at 3.5s
+Sub1 at 3.5s
 Polling point 5 at 3.6s
 Timer2 at 4s
-Polling point 6 at 4.2s
-Sub2 at 4.2s
-Polling point 7 at 4.6s
+Polling point 6 at 4.5s
+Sub2 at 4.5s
+Polling point 7 at 5.0s
 Timer3 at 5s
 Polling point 8 at 5.4s
 Sub3 at 5.4s
 Polling point 9 at 5.6s
 Sub4 at 5.6s
-Polling point 10 at 6.0s
+Polling point 10 at 5.8s
 Timer1 at 6s
-Polling point 11 at 6.2s
-Sub1 at 6.2s
+Polling point 11 at 6.5s
+Sub1 at 6.5s
 Polling point 12 at 6.6s
 Timer2 at 8s
-Polling point 13 at 8.2s
-Sub2 at 8.2s
-Polling point 14 at 8.6s
+Polling point 13 at 8.5s
+Sub2 at 8.5s
+Polling point 14 at 9.0s
 Timer1 at 9s
-Polling point 15 at 9.2s
-Sub1 at 9.2s
+Polling point 15 at 9.5s
+Sub1 at 9.5s
 Polling point 16 at 9.6s
 Timer3 at 10s
 Polling point 17 at 10.4s
 Sub3 at 10.4s
 Polling point 18 at 10.6s
 Sub4 at 10.6s
-Polling point 19 at 11.0s
+Polling point 19 at 10.8s
 Timer1 at 12s
-Timer2 at 12.2s
-Polling point 20 at 12.4s
-Sub1 at 12.4s
-Sub2 at 12.8s
-Polling point 21 at 13.2s
+Timer2 at 12.5s
+Polling point 20 at 13.0s
+Sub1 at 13.0s
+Sub2 at 13.1s
+Polling point 21 at 13.6s
 Timer1 at 15s
-Timer3 at 15.2s
-Polling point 22 at 15.6s
-Sub1 at 15.6s
+Timer3 at 15.5s
+Polling point 22 at 15.9s
+Sub1 at 15.9s
 Timer2 at 16.0s
-Sub3 at 16.2s
-Polling point 23 at 16.4s
-Sub2 at 16.4s
-Sub4 at 16.8s
-Polling point 24 at 17.2s
+Sub3 at 16.5s
+Polling point 23 at 16.7s
+Sub2 at 16.7s
+Sub4 at 17.2s
+Polling point 24 at 17.4s
 Timer1 at 18s
-Polling point 25 at 18.2s
-Sub1 at 18.2s
+Polling point 25 at 18.5s
+Sub1 at 18.5s
 Polling point 26 at 18.6s
 Timer2 at 20s
-Timer3 at 20.2s
-Polling point 27 at 20.6s
-Sub2 at 20.6s
-Timer1 at 21.0s
-Sub3 at 21.2s
-Polling point 28 at 21.4s
-Sub1 at 21.4s
-Sub4 at 21.8s
-Polling point 29 at 22.2s
+Timer3 at 20.5s
+Polling point 27 at 20.9s
+Sub2 at 20.9s
+Timer1 at 21.4s
+Sub3 at 21.9s
+Polling point 28 at 22.1s
+Sub1 at 22.1s
+Sub4 at 22.2s
+Polling point 29 at 22.4s
 Timer1 at 24s
-Timer2 at 24.2s
-Polling point 30 at 24.4s
-Sub1 at 24.4s
-Sub2 at 24.8s
-Polling point 31 at 25.2s
-Timer3 at 25s
-Polling point 32 at 25.4s
-Sub3 at 25.4s
-Polling point 33 at 25.6s
-Sub4 at 25.6s
-Polling point 34 at 26.0s
+Timer2 at 24.5s
+Timer3 at 25.0s
+Polling point 30 at 25.4s
+Sub1 at 25.4s
+Sub2 at 25.5s
+Sub3 at 26.0s
+Polling point 31 at 26.2s
+Sub4 at 26.2s
+Polling point 32 at 26.4s
 Timer1 at 27s
-Polling point 35 at 27.2s
-Sub1 at 27.2s
-Polling point 36 at 27.6s
+Polling point 33 at 27.5s
+Sub1 at 27.5s
+Polling point 34 at 27.6s
 Timer2 at 28s
-Polling point 37 at 28.2s
-Sub2 at 28.2s
-Polling point 38 at 28.6s
+Polling point 35 at 28.5s
+Sub2 at 28.5s
+Polling point 36 at 29.0s
 Timer1 at 30s
-Timer3 at 30.2s
-Polling point 39 at 30.6s
-Sub1 at 30.6s
+Timer3 at 30.5s
+Polling point 37 at 30.9s
+Sub1 at 30.9s
 Sub3 at 31.0s
-Polling point 40 at 31.2s
+Polling point 38 at 31.2s
 Sub4 at 31.2s
-Polling point 41 at 31.6s
+Polling point 39 at 31.4s
 Timer2 at 32s
-Polling point 42 at 32.2s
-Sub2 at 32.2s
-Polling point 43 at 32.6s
+Polling point 40 at 32.5s
+Sub2 at 32.5s
+Polling point 41 at 33.0s
 Timer1 at 33s
-Polling point 44 at 33.2s
-Sub1 at 33.2s
-Polling point 45 at 33.6s
+Polling point 42 at 33.5s
+Sub1 at 33.5s
+Polling point 43 at 33.6s
 Timer3 at 35s
-Polling point 46 at 35.4s
+Polling point 44 at 35.4s
 Sub3 at 35.4s
-Polling point 47 at 35.6s
+Polling point 45 at 35.6s
 Sub4 at 35.6s
-Polling point 48 at 36.0s
+Polling point 46 at 35.8s
 Timer1 at 36s
-Timer2 at 36.2s
-Polling point 49 at 36.4s
-Sub1 at 36.4s
-Sub2 at 36.8s
-Polling point 50 at 37.2s
+Timer2 at 36.5s
+Polling point 47 at 37.0s
+Sub1 at 37.0s
+Sub2 at 37.1s
+Polling point 48 at 37.6s
 Timer1 at 39s
-Polling point 51 at 39.2s
-Sub1 at 39.2s
-Polling point 52 at 39.6s
+Polling point 49 at 39.5s
+Sub1 at 39.5s
+Polling point 50 at 39.6s
 Timer2 at 40s
-Timer3 at 40.2s
-Polling point 53 at 40.6s
-Sub2 at 40.6s
-Sub3 at 41.0s
-Polling point 54 at 41.2s
-Sub4 at 41.2s
-Polling point 55 at 41.6s
+Timer3 at 40.5s
+Polling point 51 at 40.9s
+Sub2 at 40.9s
+Sub3 at 41.4s
+Polling point 52 at 41.6s
+Sub4 at 41.6s
+Polling point 53 at 41.8s
 Timer1 at 42s
-Polling point 56 at 42.2s
-Sub1 at 42.2s
-Polling point 57 at 42.6s
+Polling point 54 at 42.5s
+Sub1 at 42.5s
+Polling point 55 at 42.6s
 Timer2 at 44s
-Polling point 58 at 44.2s
-Sub2 at 44.2s
-Polling point 59 at 44.6s
+Polling point 56 at 44.5s
+Sub2 at 44.5s
+Polling point 57 at 45.0s
 Timer1 at 45s
-Timer3 at 45.2s
-Polling point 60 at 45.6s
-Sub1 at 45.6s
+Timer3 at 45.5s
+Polling point 58 at 45.9s
+Sub1 at 45.9s
 Sub3 at 46.0s
-Polling point 61 at 46.2s
+Polling point 59 at 46.2s
 Sub4 at 46.2s
-Polling point 62 at 46.6s
+Polling point 60 at 46.4s
 Timer1 at 48s
-Timer2 at 48.2s
-Polling point 63 at 48.4s
-Sub1 at 48.4s
-Sub2 at 48.8s
-Polling point 64 at 49.2s
+Timer2 at 48.5s
+Polling point 61 at 49.0s
+Sub1 at 49.0s
+Sub2 at 49.1s
+Polling point 62 at 49.6s
 Timer3 at 50s
-Polling point 65 at 50.4s
+Polling point 63 at 50.4s
 Sub3 at 50.4s
-Polling point 66 at 50.6s
+Polling point 64 at 50.6s
 Sub4 at 50.6s
-Polling point 67 at 51.0s
+Polling point 65 at 50.8s
 Timer1 at 51s
-Polling point 68 at 51.2s
-Sub1 at 51.2s
-Polling point 69 at 51.6s
+Polling point 66 at 51.5s
+Sub1 at 51.5s
+Polling point 67 at 51.6s
 Timer2 at 52s
-Polling point 70 at 52.2s
-Sub2 at 52.2s
-Polling point 71 at 52.6s
+Polling point 68 at 52.5s
+Sub2 at 52.5s
+Polling point 69 at 53.0s
 Timer1 at 54s
-Polling point 72 at 54.2s
-Sub1 at 54.2s
-Polling point 73 at 54.6s
+Polling point 70 at 54.5s
+Sub1 at 54.5s
+Polling point 71 at 54.6s
 Timer3 at 55s
-Polling point 74 at 55.4s
+Polling point 72 at 55.4s
 Sub3 at 55.4s
-Polling point 75 at 55.6s
+Polling point 73 at 55.6s
 Sub4 at 55.6s
-Polling point 76 at 56.0s
+Polling point 74 at 55.8s
 Timer2 at 56s
-Polling point 77 at 56.2s
-Sub2 at 56.2s
-Polling point 78 at 56.6s
+Polling point 75 at 56.5s
+Sub2 at 56.5s
+Polling point 76 at 57.0s
 Timer1 at 57s
-Polling point 79 at 57.2s
-Sub1 at 57.2s
-Polling point 80 at 57.6s
-Timer1 at 60s
-Timer2 at 60.2s
-Timer3 at 60.4s
-Polling point 81 at 60.8s
-Sub1 at 60.8s
-Sub2 at 61.2s
-Sub3 at 61.6s
-Polling point 82 at 61.8s
-Sub4 at 61.8s
-Polling point 83 at 62.2s
-Timer1 at 63s
-Polling point 84 at 63.2s
-Sub1 at 63.2s
-Polling point 85 at 63.6s
-Timer2 at 64s
-Polling point 86 at 64.2s
-Sub2 at 64.2s
-Polling point 87 at 64.6s
-Timer3 at 65s
-Polling point 88 at 65.4s
-Sub3 at 65.4s
-Polling point 89 at 65.6s
-Sub4 at 65.6s
-Polling point 90 at 66.0s
-Timer1 at 66s
-Polling point 91 at 66.2s
-Sub1 at 66.2s
-Polling point 92 at 66.6s
-Timer2 at 68s
-Polling point 93 at 68.2s
-Sub2 at 68.2s
-Polling point 94 at 68.6s
-Timer1 at 69s
-Polling point 95 at 69.2s
-Sub1 at 69.2s
-Polling point 96 at 69.6s
-Timer3 at 70s
-Polling point 97 at 70.4s
-Sub3 at 70.4s
-Polling point 98 at 70.6s
-Sub4 at 70.6s
-Polling point 99 at 71.0s
-Timer1 at 72s
-Timer2 at 72.2s
-Polling point 100 at 72.4s
-Sub1 at 72.4s
-Sub2 at 72.8s
-Polling point 101 at 73.2s
-Timer1 at 75s
-Timer3 at 75.2s
-Polling point 102 at 75.6s
-Sub1 at 75.6s
-Timer2 at 76.0s
-Sub3 at 76.2s
-Polling point 103 at 76.4s
-Sub2 at 76.4s
-Sub4 at 76.8s
-Polling point 104 at 77.2s
-Timer1 at 78s
-Polling point 105 at 78.2s
-Sub1 at 78.2s
-Polling point 106 at 78.6s
-Timer2 at 80s
-Timer3 at 80.2s
-Polling point 107 at 80.6s
-Sub2 at 80.6s
-Timer1 at 81.0s
-Sub3 at 81.2s
-Polling point 108 at 81.4s
-Sub1 at 81.4s
-Sub4 at 81.8s
-Polling point 109 at 82.2s
-Timer1 at 84s
-Timer2 at 84.2s
-Polling point 110 at 84.4s
-Sub1 at 84.4s
-Sub2 at 84.8s
-Polling point 111 at 85.2s
-Timer3 at 85s
-Polling point 112 at 85.4s
-Sub3 at 85.4s
-Polling point 113 at 85.6s
-Sub4 at 85.6s
-Polling point 114 at 86.0s
-Timer1 at 87s
-Polling point 115 at 87.2s
-Sub1 at 87.2s
-Polling point 116 at 87.6s
-Timer2 at 88s
-Polling point 117 at 88.2s
-Sub2 at 88.2s
-Polling point 118 at 88.6s
-Timer1 at 90s
-Timer3 at 90.2s
-Polling point 119 at 90.6s
-Sub1 at 90.6s
-Sub3 at 91.0s
-Polling point 120 at 91.2s
-Sub4 at 91.2s
-Polling point 121 at 91.6s
-Timer2 at 92s
-Polling point 122 at 92.2s
-Sub2 at 92.2s
-Polling point 123 at 92.6s
-Timer1 at 93s
-Polling point 124 at 93.2s
-Sub1 at 93.2s
-Polling point 125 at 93.6s
-Timer3 at 95s
-Polling point 126 at 95.4s
-Sub3 at 95.4s
-Polling point 127 at 95.6s
-Sub4 at 95.6s
-Polling point 128 at 96.0s
-Timer1 at 96s
-Timer2 at 96.2s
-Polling point 129 at 96.4s
-Sub1 at 96.4s
-Sub2 at 96.8s
-Polling point 130 at 97.2s
-Timer1 at 99s
-Polling point 131 at 99.2s
-Sub1 at 99.2s
-Polling point 132 at 99.6s
-Timer2 at 100s
-Timer3 at 100.2s
-Polling point 133 at 100.6s
-Sub2 at 100.6s
-Sub3 at 101.0s
-Polling point 134 at 101.2s
-Sub4 at 101.2s
-Polling point 135 at 101.6s
-Timer1 at 102s
-Polling point 136 at 102.2s
-Sub1 at 102.2s
-Polling point 137 at 102.6s
-Timer2 at 104s
-Polling point 138 at 104.2s
-Sub2 at 104.2s
-Polling point 139 at 104.6s
-Timer1 at 105s
-Timer3 at 105.2s
-Polling point 140 at 105.6s
-Sub1 at 105.6s
-Sub3 at 106.0s
-Polling point 141 at 106.2s
-Sub4 at 106.2s
-Polling point 142 at 106.6s
-Timer1 at 108s
-Timer2 at 108.2s
-Polling point 143 at 108.4s
-Sub1 at 108.4s
-Sub2 at 108.8s
-Polling point 144 at 109.2s
-Timer3 at 110s
-Polling point 145 at 110.4s
-Sub3 at 110.4s
-Polling point 146 at 110.6s
-Sub4 at 110.6s
-Polling point 147 at 111.0s
-Timer1 at 111s
-Polling point 148 at 111.2s
-Sub1 at 111.2s
-Polling point 149 at 111.6s
-Timer2 at 112s
-Polling point 150 at 112.2s
-Sub2 at 112.2s
-Polling point 151 at 112.6s
-Timer1 at 114s
-Polling point 152 at 114.2s
-Sub1 at 114.2s
-Polling point 153 at 114.6s
-Timer3 at 115s
-Polling point 154 at 115.4s
-Sub3 at 115.4s
-Polling point 155 at 115.6s
-Sub4 at 115.6s
-Polling point 156 at 116.0s
-Timer2 at 116s
-Polling point 157 at 116.2s
-Sub2 at 116.2s
-Polling point 158 at 116.6s
-Timer1 at 117s
-Polling point 159 at 117.2s
-Sub1 at 117.2s
-Polling point 160 at 117.6s
+Polling point 77 at 57.5s
+Sub1 at 57.5s
+Polling point 78 at 57.6s
