@@ -351,9 +351,9 @@ ax.tick_params(axis='x', labelsize='small')  # 设置横轴刻度标签的字体
 # 在图表下方添加注释来显示每个 Timer 和 Callback 的信息
 info_text = ""
 for obj in executor.timers:
-    info_text += f"{obj.name}: T={obj.period}, P={obj.priority}, E={obj.execution_time}\n"
+    info_text += f"{obj.name}: T={obj.period}, P={obj.priority}, E={obj.execution_time}, AVG = {Statistics.calculate_average(obj.read_times)}, VAR = {Statistics.calculate_variance(obj.read_times)}\n"
 for obj in executor.callbacks:
-    info_text += f"{obj.name}: P={obj.priority}, E={obj.execution_time}\n"
+    info_text += f"{obj.name}: P={obj.priority}, E={obj.execution_time}, AVG = {Statistics.calculate_average(obj.read_times)}, VAR = {Statistics.calculate_variance(obj.read_times)}\n"
 ax.text(0, -1.5, info_text, va='top', ha='left', color='black', fontsize=8)
 
 
