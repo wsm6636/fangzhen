@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import os
+import random
 class OutputManager:
     def __init__(self, filename):
         self.filename = filename
@@ -14,15 +15,16 @@ class OutputManager:
         self.events.append(message)  # 将事件添加到列表中
 
 class Timer:
-    def __init__(self, name, period, execution_time, priority, output_manager):
+    def __init__(self, name, period, priority, output_manager):
         self.name = name
+        self.execution_time = round(random.uniform(0.1, 0.5), 1)
         self.period = period
-        self.execution_time = execution_time
         self.priority = priority
         self.next_execution_time = 0  # 初始时间为周期后
         self.subcallback = None
         self.buffer = None  # 为定时器创建一个buffer，大小为1
         self.output_manager = output_manager
+        print(f"Created Timer '{self.name}' with period {self.period}, priority {self.priority}, and execution time {self.execution_time}")  # 打印信息
 
     def execute(self):
         global current_time
@@ -40,14 +42,15 @@ class Timer:
         return self.priority < other.priority
 
 class Callback:
-    def __init__(self, name, execution_time, priority, output_manager, triggers_new):
+    def __init__(self, name, priority, output_manager, triggers_new):
         self.name = name
-        self.execution_time = execution_time
+        self.execution_time = round(random.uniform(0.1, 0.5), 1)
         self.priority = priority
         self.subcallback = None
         self.buffer = None  # 为定时器创建一个buffer，大小为1
         self.triggers_new = triggers_new
         self.output_manager = output_manager
+        print(f"Created Callback '{self.name}' with priority {self.priority}, and execution time {self.execution_time}")  # 打印信息
 
     def execute(self):
         global current_time
@@ -70,6 +73,7 @@ class Executor:
 
     def add_timer(self, timer):
         self.timers.append(timer)
+        print()
     
     def add_callback(self, callback):
         self.callbacks.append(callback)
@@ -130,21 +134,21 @@ class Executor:
 global current_time
 current_time = 0
 
-runtime = 60
+runtime = 120
 
 output_manager = OutputManager('output.txt')
 
 # 创建执行器实例
 executor = Executor(output_manager)
 
-timer1 = Timer("Timer1", 3, 0.1, 1, output_manager)
-timer2 = Timer("Timer2", 8, 0.1, 2, output_manager)
-timer3 = Timer("Timer3", 8, 0.1, 3, output_manager)
+timer1 = Timer("Timer1", 3, 1, output_manager)
+timer2 = Timer("Timer2", 4, 2, output_manager)
+timer3 = Timer("Timer3", 5, 3, output_manager)
 
-callback1 = Callback("Sub1", 0.2, 4, output_manager, triggers_new=False)
-callback2 = Callback("Sub2", 0.2, 5, output_manager, triggers_new=False)
-callback3 = Callback("Sub3", 0.2, 6, output_manager, triggers_new=True)
-callback4 = Callback("Sub4", 0.2, 7, output_manager, triggers_new=False)
+callback1 = Callback("Sub1", 4, output_manager, triggers_new=False)
+callback2 = Callback("Sub2", 5, output_manager, triggers_new=False)
+callback3 = Callback("Sub3", 6, output_manager, triggers_new=True)
+callback4 = Callback("Sub4", 7, output_manager, triggers_new=False)
 
 timer1.subcallback = callback1
 timer2.subcallback = callback2
@@ -193,6 +197,7 @@ with open('output.txt', 'r') as file:
 
 # 绘制图表
 fig, ax = plt.subplots(figsize=(12, 8))
+fig.subplots_adjust(bottom=0.2)  # 调整底部空间
 
 # 绘制每个 Timer 和 Callback 的执行时间
 y_positions = {obj.name: i for i, obj in enumerate(all_objects)}
@@ -205,7 +210,6 @@ for label, times in timestamps.items():
 # 在每个 Polling Point 画一条竖线，并标注
 for pp_time in pp_timestamps:
     ax.axvline(x=pp_time, color='grey', linestyle='--', linewidth=0.5)  # 画竖线
-    # ax.text(pp_time, max(y_positions.values()) + 1, 'PP', va='bottom', ha='center', color='grey', fontsize=9)  # 标注PP
 
 # 设置图表的标题和标签
 ax.set_xlabel('Time (s)')
@@ -232,6 +236,15 @@ ax.set_ylim(-1, len(all_objects))
 
 # 设置横轴刻度标签的显示格式和字体大小
 ax.tick_params(axis='x', labelsize='small')  # 设置横轴刻度标签的字体大小
+
+# 在图表下方添加注释来显示每个 Timer 和 Callback 的信息
+info_text = ""
+for obj in executor.timers:
+    info_text += f"{obj.name}: T={obj.period}, P={obj.priority}, E={obj.execution_time}\n"
+for obj in executor.callbacks:
+    info_text += f"{obj.name}: P={obj.priority}, E={obj.execution_time}\n"
+# ax.text(runtime - 10, -0.5, info_text, va='top', ha='right', color='black', fontsize=8)
+ax.text(0, -1.5, info_text, va='top', ha='left', color='black', fontsize=8)
 
 # 保存图片
 plt.savefig('output.png')
