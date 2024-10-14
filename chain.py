@@ -268,18 +268,6 @@ with open('output.txt', 'r') as file:
 
 # 按优先级排序
 all_objects.sort()
-# for timer in timers:
-#     read_intervals = Statistics.calculate_intervals(timer.read_times)
-#     write_intervals = Statistics.calculate_intervals(timer.write_times)
-#     print(f"Timer {timer.name} Read Intervals: {read_intervals}")
-#     print(f"Timer {timer.name} Write Intervals: {write_intervals}")
-
-# for callback in callbacks:
-#     read_intervals = Statistics.calculate_intervals(callback.read_times)
-#     write_intervals = Statistics.calculate_intervals(callback.write_times)
-#     print(f"Callback {callback.name} Read Intervals: {read_intervals}")
-#     print(f"Callback {callback.name} Write Intervals: {write_intervals}")
-
 # 写入文件
 with open('read_write_times.txt', 'w') as file:
     file.write(f"### info ###\n")
@@ -293,9 +281,6 @@ with open('read_write_times.txt', 'w') as file:
         file.write("read  time: " + " ".join(f"{t:.1f}" for t in obj.read_times) + "\n")
         file.write("write time: " + " ".join(f"{t:.1f}" for t in obj.write_times) + "\n")
 
-        file.write(f"\nread  time: AVG = {Statistics.calculate_average(obj.read_times)}, VAR = {Statistics.calculate_variance(obj.read_times)}\n")
-        file.write(f"write time: AVG = {Statistics.calculate_average(obj.write_times)}, VAR = {Statistics.calculate_variance(obj.write_times)}\n")
-        
         read_intervals = Statistics.calculate_intervals(obj.read_times)
         write_intervals = Statistics.calculate_intervals(obj.write_times)
         file.write("\nRead  Intervals: ")
@@ -303,6 +288,10 @@ with open('read_write_times.txt', 'w') as file:
         
         file.write("Write Intervals: ")
         file.write(" ".join(f"{i:.1f}" for i in write_intervals) + "\n")
+
+        file.write(f"\nread  intervals: AVG = {Statistics.calculate_average(read_intervals)}, VAR = {Statistics.calculate_variance(read_intervals)}\n")
+        file.write(f"write intervals: AVG = {Statistics.calculate_average(write_intervals)}, VAR = {Statistics.calculate_variance(write_intervals)}\n")
+        
 
 
 
@@ -351,9 +340,9 @@ ax.tick_params(axis='x', labelsize='small')  # 设置横轴刻度标签的字体
 # 在图表下方添加注释来显示每个 Timer 和 Callback 的信息
 info_text = ""
 for obj in executor.timers:
-    info_text += f"{obj.name}: T={obj.period}, P={obj.priority}, E={obj.execution_time}, AVG = {Statistics.calculate_average(obj.read_times)}, VAR = {Statistics.calculate_variance(obj.read_times)}\n"
+    info_text += f"{obj.name}: T={obj.period}, P={obj.priority}, E={obj.execution_time}\n"
 for obj in executor.callbacks:
-    info_text += f"{obj.name}: P={obj.priority}, E={obj.execution_time}, AVG = {Statistics.calculate_average(obj.read_times)}, VAR = {Statistics.calculate_variance(obj.read_times)}\n"
+    info_text += f"{obj.name}: P={obj.priority}, E={obj.execution_time}\n"
 ax.text(0, -1.5, info_text, va='top', ha='left', color='black', fontsize=8)
 
 
