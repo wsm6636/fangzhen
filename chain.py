@@ -1,7 +1,12 @@
 import matplotlib.pyplot as plt
 import os
 import random
-import networkx as nx
+
+import numpy as np
+from scipy import stats
+from scipy.signal import periodogram
+
+import re
 
 class OutputManager:
     def __init__(self, filename):
@@ -19,7 +24,6 @@ class OutputManager:
 class Timer:
     def __init__(self, name, period, priority, output_manager):
         self.name = name
-        self.execution_time = round(random.uniform(0.1, 0.5), 1)
         self.period = period
         self.priority = priority
         self.next_execution_time = 0  # 初始时间为周期后
@@ -28,52 +32,70 @@ class Timer:
         self.output_manager = output_manager
         self.read_times = []
         self.write_times = []
-        print(f"Created Timer '{self.name}' with period {self.period}, priority {self.priority}, and execution time {self.execution_time}")  # 打印信息
+        self.execution_times = []  # 用于存储每次执行的时间
+        self.index = 1
 
     def execute(self):
         global current_time
         self.read_times.append(current_time)
         self.output_manager.write(f"{self.name} at {current_time}s")
-        # print(f"Timer {self.name} executed at {current_time}s")
-        current_time += self.execution_time
+        execution_time = round(random.uniform(0.1, 0.5), 1)  # 每次执行时随机生成执行时间
+        # execution_time = 0.5
+        current_time += execution_time
         current_time = round(current_time, 2)
-        self.next_execution_time += self.period  # 更新下一个执行时间
-        self.buffer = self.subcallback  # 更新buffer为最新的回调
         self.write_times.append(current_time)
+        self.execution_times.append(execution_time)  # 记录执行时间
+        self.next_execution_time = self.index * self.period  # 更新下一个执行时间
+        self.buffer = self.subcallback  # 更新buffer为最新的回调
+        self.index += 1
 
     def is_ready(self, current_time):
         return current_time >= self.next_execution_time
 
     def __lt__(self, other):
         return self.priority < other.priority
+    
+
 
 class Callback:
     def __init__(self, name, priority, output_manager, triggers_new):
-        self.name = name
-        self.execution_time = round(random.uniform(0.1, 0.5), 1)
+        self.name = name        
         self.priority = priority
         self.subcallback = None
         self.buffer = None  # 为定时器创建一个buffer，大小为1
         self.triggers_new = triggers_new
         self.output_manager = output_manager
-        print(f"Created Callback '{self.name}' with priority {self.priority}, and execution time {self.execution_time}")  # 打印信息
         self.read_times = []
         self.write_times = []
+        self.execution_times = []  # 用于存储每次执行的时间
         
 
     def execute(self):
         global current_time
         self.read_times.append(current_time)
         self.output_manager.write(f"{self.name} at {current_time}s")
-        # print(f"Callback {self.name} executed at {current_time}s")
-        current_time += self.execution_time
+        execution_time = round(random.uniform(0.1, 0.5), 1)  # 每次执行时随机生成执行时间
+        # execution_time = 0.5
+        current_time += execution_time
         current_time = round(current_time, 2)
+        self.write_times.append(current_time)
+        self.execution_times.append(execution_time)  # 记录执行时间
         if self.triggers_new is True:
             self.buffer = self.subcallback
-        self.write_times.append(current_time)
+
+        ready_timers = [t for t in executor.timers if t.is_ready(current_time)]
+        if ready_timers:
+            ready_timers.sort()  # 按优先级排序
+            # timer = ready_timers[0]
+            # timer.next_execution_time = current_time
+            for t in ready_timers:
+                t.next_execution_time += current_time - t.next_execution_time 
+
+
 
     def __lt__(self, other):
         return self.priority < other.priority
+    
 
 class Executor:
     def __init__(self, output_manager):
@@ -81,6 +103,7 @@ class Executor:
         self.readyset = []
         self.callbacks = []
         self.output_manager = output_manager
+
 
     def add_timer(self, timer):
         self.timers.append(timer)
@@ -91,31 +114,36 @@ class Executor:
 
     def run(self, runtime):
         global current_time
-        # current_time = 0
+        global is_executing
         pp = 0
         while current_time < runtime:  # 模拟运行30秒
             # 收集所有已就绪的定时器
             ready_timers = [t for t in self.timers if t.is_ready(current_time)]
             ready_timers.sort()  # 按优先级排序
 
-            while ready_timers:
-                timer = ready_timers.pop(0)  # 执行优先级最高的定时器
-                timer.execute()
-                # 再次检查是否有新的定时器就绪
-                ready_timers = [t for t in self.timers if t.is_ready(current_time)]
-                ready_timers.sort()  # 重新排序
+            if not is_executing:
+                while ready_timers:
+                    timer = ready_timers.pop(0)  # 执行优先级最高的定时器
+                    is_executing = True
+                    timer.execute()
+                    is_executing = False
+                    # 再次检查是否有新的定时器就绪
+                    ready_timers = [t for t in self.timers if t.is_ready(current_time)]
+                    ready_timers.sort()  # 重新排序
 
             # 检查readyset是否为空
-            if not ready_timers and self.readyset:
+            if not ready_timers and self.readyset and not is_executing:
                 # 如果没有就绪的定时器并且readyset不空，执行callback
                 ready_callbacks = sorted(self.readyset, key=lambda x: x.priority)
                 # for callback in ready_callbacks:
                 callback = ready_callbacks[0]
                 self.readyset.remove(callback)
+                is_executing = True
                 callback.execute()
+                is_executing = False
 
             # 如果没有就绪的定时器和readyset为空，更新轮询点
-            if not ready_timers and not self.readyset:
+            if not ready_timers and not self.readyset and not is_executing:
                 # 更新轮询点时间
                 pp += 1
                 self.output_manager.write(f"Polling point {pp} at {current_time}s")
@@ -132,14 +160,13 @@ class Executor:
                 if not self.readyset:
                     current_time = self.get_next_timer_time()
                     current_time = round(current_time, 2)
-                    
+                
     def get_next_timer_time(self):
         # 找到下一个就绪的定时器时间
         next_times = [t.next_execution_time for t in self.timers]
         if next_times:
             return min(next_times)
-        # else:
-            # return current_time  # 如果没有更多的定时器，保持当前时间
+        
 class Statistics:
     #平均值
     @staticmethod
@@ -200,11 +227,36 @@ class Statistics:
                     theory_time += triggering_timer.period + callback.execution_time
         return callback_theory_times
 
+    def check_read_time_between_others(all_objects):
+    # 存储检测结果
+        results = []
+
+        # 遍历所有对象
+        for i, obj1 in enumerate(all_objects):
+            # 遍历所有其他对象
+            for j, obj2 in enumerate(all_objects):
+                if i != j:  # 避免自身比较
+                    # 检查 obj1 的每个读时间是否在 obj2 的读时间和写时间之间
+                    for read_time1 in obj1.read_times:
+                        if any(obj2.read_times[i] < read_time1 < obj2.write_times[i] for i in range(len(obj2.read_times))):
+                            results.append((obj1.name, obj2.name, read_time1, "between read and write times"))
+
+                    # 检查 obj1 的每个写时间是否在 obj2 的读时间和写时间之间
+                    for write_time1 in obj1.write_times:
+                        if any(obj2.read_times[i] < write_time1 < obj2.write_times[i] for i in range(len(obj2.read_times))):
+                            results.append((obj1.name, obj2.name, write_time1, "between read and write times"))
+
+        return results
+
+                
+
 # 全局变量，用于跟踪当前时间
 global current_time
 current_time = 0
+global is_executing
+is_executing = False
 
-runtime = 60
+runtime = 120
 
 output_manager = OutputManager('output.txt')
 
@@ -240,8 +292,10 @@ executor.add_callback(callback4)
 # 运行执行器
 executor.run(runtime)
 
+# analysis
 # 从 Executor 实例中获取 Timer 和 Callback 列表
 all_objects = executor.timers + executor.callbacks
+# all_objects = [timer1, timer2, callback1, callback2, timer3, callback3, callback4]
 
 # 创建一个映射，将 Timer 和 Callback 的名称映射到它们的对象实例
 name_to_object = {obj.name: obj for obj in all_objects}
@@ -266,18 +320,17 @@ with open('output.txt', 'r') as file:
                 pp_timestamps.append(timestamp)
 
 
-# 按优先级排序
-all_objects.sort()
 # 写入文件
 with open('read_write_times.txt', 'w') as file:
     file.write(f"### info ###\n")
     for obj in executor.timers:
-        file.write(f"{obj.name}: T={obj.period}, P={obj.priority}, E={obj.execution_time} \n")
+        file.write(f"{obj.name}: T={obj.period}, P={obj.priority}\n")
     for obj in executor.callbacks:
-        file.write(f"{obj.name}: P={obj.priority}, E={obj.execution_time}\n")
-    file.write(f"\n### read & write time ###\n")
+        file.write(f"{obj.name}: P={obj.priority}\n")
+    file.write(f"\n### read & write & execution time###\n")
     for obj in all_objects:
         file.write(f"\n### {obj.name} ###\n")
+        file.write("Execution times: " + " ".join(f"{t:.1f}" for t in obj.execution_times) + "\n")
         file.write("read  time: " + " ".join(f"{t:.1f}" for t in obj.read_times) + "\n")
         file.write("write time: " + " ".join(f"{t:.1f}" for t in obj.write_times) + "\n")
 
@@ -293,19 +346,37 @@ with open('read_write_times.txt', 'w') as file:
         file.write(f"write intervals: AVG = {Statistics.calculate_average(write_intervals)}, VAR = {Statistics.calculate_variance(write_intervals)}\n")
         
 
+    file.write("\nPolling Point Times:\n")
+    file.write(f" ".join(f"{t:.1f}" for t in pp_timestamps) + "\n")
+    pp_intervals = Statistics.calculate_intervals(pp_timestamps)
+    file.write("PP Intervals: ")
+    file.write(" ".join(f"{i:.1f}" for i in pp_intervals) + "\n")
+    file.write(f"AVG = {Statistics.calculate_average(pp_intervals)}, VAR = {Statistics.calculate_variance(pp_intervals)}\n")
 
+    # 在写入文件之后，画图之前调用 check_read_time_between_others 函数
+    parallel_results = Statistics.check_read_time_between_others(all_objects)
+
+    # 打印结果
+    if parallel_results:
+        print("Detected read times between other objects' read and write times:")
+        file.write("\nDetected read times between other objects' read and write times:\n")
+        for result in parallel_results:
+            file.write(f"Object {result[0]} at time {result[2]}s is between {result[1]}'s read and write times ({result[3]})\n")
+            print(f"Object {result[0]} at time {result[2]}s is between {result[1]}'s read and write times ({result[3]})")
+    else:
+        print("No read times detected between other objects' read and write times.")
+        file.write("\nNo read times detected between other objects' read and write times.\n")
 
 # 绘制图表
 fig, ax = plt.subplots(figsize=(12, 8))
 fig.subplots_adjust(bottom=0.2)  # 调整底部空间
 
+
 # 绘制每个 Timer 和 Callback 的执行时间
-y_positions = {obj.name: i for i, obj in enumerate(all_objects)}
-for label, times in timestamps.items():
-    if times:
-        execution_time = name_to_object[label].execution_time
-        for timestamp in times:
-            ax.broken_barh([(timestamp, execution_time)], (y_positions[label], 0.5), facecolors=color_map[label])
+for i, obj in enumerate(all_objects):
+    if obj.read_times and obj.execution_times:
+        for start, exec_time in zip(obj.read_times, obj.execution_times):
+            ax.broken_barh([(start, exec_time)], (i, 0.8), facecolors=colors[i])
 
 # 在每个 Polling Point 画一条竖线，并标注
 for pp_time in pp_timestamps:
@@ -318,7 +389,7 @@ ax.set_title('Execution Timeline by Task')
 
 # 自定义纵轴刻度标签
 ax.set_yticks(range(len(all_objects)))
-ax.set_yticklabels(list(y_positions.keys()))
+ax.set_yticklabels([obj.name for obj in all_objects])
 
 # 显示背景的格线，增加网格线的密集度
 ax.grid(True, which='both', linestyle='-', linewidth='0.5', alpha=0.7)
@@ -326,13 +397,16 @@ ax.grid(True, which='both', linestyle='-', linewidth='0.5', alpha=0.7)
 
 min_period = min(timer.period for timer in executor.timers)
 # 设置x轴的刻度为最小周期的倍数，这里我们以最小周期为1个单位
-ax.set_xticks([i * min_period for i in range(1, runtime // min_period + 1)])
+# ax.set_xticks([i * min_period for i in range(1, runtime // min_period + 1)])
 # 设置x轴的刻度标签为最小周期的倍数
-ax.set_xticklabels([str(i * min_period) for i in range(1, runtime // min_period + 1)])
+# ax.set_xticklabels([str(i * min_period) for i in range(1, runtime // min_period + 1)])
+
+ax.xaxis.set_major_locator(plt.MultipleLocator(1))
+
 
 # 设置横纵轴的范围
 ax.set_xlim(0, runtime)
-ax.set_ylim(-1, len(all_objects))
+ax.set_ylim(0, len(all_objects))
 
 # 设置横轴刻度标签的显示格式和字体大小
 ax.tick_params(axis='x', labelsize='small')  # 设置横轴刻度标签的字体大小
@@ -340,15 +414,14 @@ ax.tick_params(axis='x', labelsize='small')  # 设置横轴刻度标签的字体
 # 在图表下方添加注释来显示每个 Timer 和 Callback 的信息
 info_text = ""
 for obj in executor.timers:
-    info_text += f"{obj.name}: T={obj.period}, P={obj.priority}, E={obj.execution_time}\n"
+    info_text += f"{obj.name}: T={obj.period}, P={obj.priority}\n"
 for obj in executor.callbacks:
-    info_text += f"{obj.name}: P={obj.priority}, E={obj.execution_time}\n"
-ax.text(0, -1.5, info_text, va='top', ha='left', color='black', fontsize=8)
-
-
+    info_text += f"{obj.name}: P={obj.priority}\n"
+ax.text(0, -0.5, info_text, va='top', ha='left', color='black', fontsize=8)
 
 # 保存图片
 plt.savefig('output.png')
 
 # 显示图表
 plt.show()
+
