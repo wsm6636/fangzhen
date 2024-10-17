@@ -18,7 +18,7 @@ class OutputManager:
     def write(self, message):
         with open(self.filename, 'a') as file:
             file.write(message + '\n')
-        print(message)  # 同时打印到屏幕
+        # print(message)  # 同时打印到屏幕
         self.events.append(message)  # 将事件添加到列表中
 
 class Timer:
@@ -107,7 +107,6 @@ class Executor:
 
     def add_timer(self, timer):
         self.timers.append(timer)
-        print()
     
     def add_callback(self, callback):
         self.callbacks.append(callback)
@@ -141,12 +140,10 @@ class Executor:
                 is_executing = True
                 callback.execute()
                 is_executing = False
-
+            
             # 如果没有就绪的定时器和readyset为空，更新轮询点
             if not ready_timers and not self.readyset and not is_executing:
-                # 更新轮询点时间
-                pp += 1
-                self.output_manager.write(f"Polling point {pp} at {current_time}s")
+                # 更新轮询点时间                
                 # print(f"Polling point {pp} at {current_time}s")
                 # 将所有定时器的buffer中的回调放入readyset，并清空buffer
                 for timer in self.timers:
@@ -157,7 +154,10 @@ class Executor:
                     if callback.buffer:
                         self.readyset.append(callback.buffer)
                         callback.buffer = None
-                if not self.readyset:
+                if self.readyset:
+                    pp += 1
+                    self.output_manager.write(f"Polling point {pp} at {current_time}s")
+                else:
                     current_time = self.get_next_timer_time()
                     current_time = round(current_time, 2)
                 
@@ -319,39 +319,44 @@ with open('output.txt', 'r') as file:
             elif "Polling point" in line:
                 pp_timestamps.append(timestamp)
 
-
 # 写入文件
 with open('read_write_times.txt', 'w') as file:
-    file.write(f"### info ###\n")
+    file.write("### info ###\n")
     for obj in executor.timers:
-        file.write(f"{obj.name}: T={obj.period}, P={obj.priority}\n")
+        file.write(f"{obj.name}: T={obj.period:4}, P={obj.priority:2}\n")
     for obj in executor.callbacks:
-        file.write(f"{obj.name}: P={obj.priority}\n")
-    file.write(f"\n### read & write & execution time###\n")
+        file.write(f"{obj.name}: P={obj.priority:2}\n")
+    file.write("\n### read & write & execution time###\n")
     for obj in all_objects:
         file.write(f"\n### {obj.name} ###\n")
-        file.write("Execution times: " + " ".join(f"{t:.1f}" for t in obj.execution_times) + "\n")
-        file.write("read  time: " + " ".join(f"{t:.1f}" for t in obj.read_times) + "\n")
-        file.write("write time: " + " ".join(f"{t:.1f}" for t in obj.write_times) + "\n")
+        execution_times_str = " ".join(f"{t:5.1f}" for t in obj.execution_times)
+        file.write(f"Execution times: {execution_times_str}\n")
+        read_times_str = " ".join(f"{t:5.1f}" for t in obj.read_times)
+        file.write(f"read       time: {read_times_str}\n")
+        write_times_str = " ".join(f"{t:5.1f}" for t in obj.write_times)
+        file.write(f"write      time: {write_times_str}\n")
 
         read_intervals = Statistics.calculate_intervals(obj.read_times)
         write_intervals = Statistics.calculate_intervals(obj.write_times)
-        file.write("\nRead  Intervals: ")
-        file.write(" ".join(f"{i:.1f}" for i in read_intervals) + "\n")
-        
-        file.write("Write Intervals: ")
-        file.write(" ".join(f"{i:.1f}" for i in write_intervals) + "\n")
+        read_intervals_str = " ".join(f"{i:5.1f}" for i in read_intervals)
+        file.write(f"Read  Intervals: {read_intervals_str}\n")
+        write_intervals_str = " ".join(f"{i:5.1f}" for i in write_intervals)
+        file.write(f"Write Intervals: {write_intervals_str}\n")
 
-        file.write(f"\nread  intervals: AVG = {Statistics.calculate_average(read_intervals)}, VAR = {Statistics.calculate_variance(read_intervals)}\n")
-        file.write(f"write intervals: AVG = {Statistics.calculate_average(write_intervals)}, VAR = {Statistics.calculate_variance(write_intervals)}\n")
-        
+        read_avg_var_str = f"read  intervals: AVG = {Statistics.calculate_average(read_intervals):.3f}, VAR = {Statistics.calculate_variance(read_intervals):.3f}"
+        file.write(f"\n{read_avg_var_str}\n")
+        write_avg_var_str = f"write intervals: AVG = {Statistics.calculate_average(write_intervals):.3f}, VAR = {Statistics.calculate_variance(write_intervals):.3f}"
+        file.write(f"{write_avg_var_str}\n")
 
     file.write("\nPolling Point Times:\n")
-    file.write(f" ".join(f"{t:.1f}" for t in pp_timestamps) + "\n")
+    pp_times_str = " ".join(f"{t:.1f}" for t in pp_timestamps)
+    file.write(f"{pp_times_str}\n")
     pp_intervals = Statistics.calculate_intervals(pp_timestamps)
-    file.write("PP Intervals: ")
-    file.write(" ".join(f"{i:.1f}" for i in pp_intervals) + "\n")
-    file.write(f"AVG = {Statistics.calculate_average(pp_intervals)}, VAR = {Statistics.calculate_variance(pp_intervals)}\n")
+    pp_intervals_str = " ".join(f"{i:.1f}" for i in pp_intervals)
+    file.write(f"PP Intervals: {pp_intervals_str}\n")
+    pp_avg_var_str = f"AVG = {Statistics.calculate_average(pp_intervals):.2f}, VAR = {Statistics.calculate_variance(pp_intervals):.2f}"
+    file.write(f"{pp_avg_var_str}\n")
+
 
     # 在写入文件之后，画图之前调用 check_read_time_between_others 函数
     parallel_results = Statistics.check_read_time_between_others(all_objects)
@@ -380,7 +385,7 @@ for i, obj in enumerate(all_objects):
 
 # 在每个 Polling Point 画一条竖线，并标注
 for pp_time in pp_timestamps:
-    ax.axvline(x=pp_time, color='grey', linestyle='--', linewidth=0.5)  # 画竖线
+    ax.axvline(x=pp_time, color='orange', linestyle='--', linewidth=0.5)  # 画竖线
 
 # 设置图表的标题和标签
 ax.set_xlabel('Time (s)')
