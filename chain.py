@@ -256,7 +256,7 @@ current_time = 0
 global is_executing
 is_executing = False
 
-runtime = 120
+runtime = 130
 
 output_manager = OutputManager('output.txt')
 
@@ -323,7 +323,7 @@ with open('output.txt', 'r') as file:
 with open('read_write_times.txt', 'w') as file:
     file.write("### info ###\n")
     for obj in executor.timers:
-        file.write(f"{obj.name}: T={obj.period:4}, P={obj.priority:2}\n")
+        file.write(f"{obj.name}: T={obj.period:2}, P={obj.priority:2}\n")
     for obj in executor.callbacks:
         file.write(f"{obj.name}: P={obj.priority:2}\n")
     file.write("\n### read & write & execution time###\n")
