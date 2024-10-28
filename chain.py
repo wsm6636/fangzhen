@@ -91,9 +91,21 @@ class Log:
         with open(filename, 'w') as file:
             file.write("#### info ####\n")
             for obj in executor.timers:
-                file.write(f"{obj.name}: T={obj.period:2}, P={obj.priority:2}\n")
+                triggered_event = '' 
+                if obj.subcallback is not None: 
+                    triggered_event = f"{obj.subcallback.name}" 
+                else:
+                    triggered_event = 'None'
+                file.write(f"{obj.name}: T={obj.period:2}, P={obj.priority:2}, Triggered Event={triggered_event}\n")
+                # file.write(f"{obj.name}: T={obj.period:2}, P={obj.priority:2}\n")
             for obj in executor.callbacks:
-                file.write(f"{obj.name}: T={obj.period:2}, P={obj.priority:2}\n")
+                triggered_event = '' 
+                if obj.subcallback is not None: 
+                    triggered_event = f"{obj.subcallback.name}" 
+                else:
+                    triggered_event = 'None'
+                file.write(f"{obj.name}: T={obj.period:2}, P={obj.priority:2}, Triggered Event={triggered_event}\n")
+                # file.write(f"{obj.name}: T={obj.period:2}, P={obj.priority:2}\n")
             file.write("\n#### read & write & execution time####\n")
             for obj in all_objects:
                 file.write(f"\n### {obj.name} ###\n")
@@ -251,8 +263,8 @@ class Timer:
         pattern = current_time - (self.index - 1) * self.period
         self.patterns.append(pattern)
 
-        # execution_time = round(random.uniform(0.1, 0.5), 1)  # 每次执行时随机生成执行时间
-        execution_time = 0.5
+        execution_time = round(random.uniform(0.1, 0.5), 1)  # 每次执行时随机生成执行时间
+        # execution_time = 0.5
 
         current_time += execution_time
         current_time = round(current_time, 2)
@@ -294,8 +306,8 @@ class Callback:
         pattern = current_time - (self.index - 1) * self.period
         self.patterns.append(pattern)
 
-        # execution_time = round(random.uniform(0.1, 0.5), 1)  # 每次执行时随机生成执行时间
-        execution_time = 0.5
+        execution_time = round(random.uniform(0.1, 0.5), 1)  # 每次执行时随机生成执行时间
+        # execution_time = 0.5
 
         current_time += execution_time
         current_time = round(current_time, 2)
@@ -403,15 +415,15 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 # 在输出文件名后面加入时间戳
 output_file_name = f"{output_file_base}_{timestamp}"
 
-file_path = f'{output_file_name}.txt'
-plot_path = f'{output_file_name}.png'
+file_path = f'result/{output_file_name}.txt'
+plot_path = f'result/{output_file_name}.png'
 
 # 创建执行器实例
 executor = Executor()
 
-timer1 = Timer("Timer1", 3, 1)
-timer2 = Timer("Timer2", 4, 2)
-timer3 = Timer("Timer3", 5, 3)
+timer1 = Timer("Timer1", 4, 1)
+timer2 = Timer("Timer2", 5, 2)
+timer3 = Timer("Timer3", 6, 3)
 
 callback1 = Callback("Sub1", 4, triggers_new=False)
 callback2 = Callback("Sub2", 5, triggers_new=False)
