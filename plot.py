@@ -19,12 +19,9 @@ def read_data(file_path):
             timestamps[current_name]['read_times'] = list(map(float, line.split(':')[1].split()))
         elif current_name and 'Execution times:' in line:
             timestamps[current_name]['execution_times'] = list(map(float, line.split(':')[1].split()))
-        elif 'Polling Point Times:' in line:
-                parsing_pp_timestamps = True
-                continue
-        elif parsing_pp_timestamps and line.strip() and not 'PP Intervals:' in line:
-            pp_timestamps.extend(map(float, line.split()))
-        elif parsing_pp_timestamps and 'PP Intervals:' in line:
+        elif 'Polling Point: ' in line and not 'PP  Intervals: ' in line:
+            pp_timestamps = list(map(float, line.split(':')[1].split()))
+        elif 'PP  Intervals:' in line:
             break
 
 
@@ -68,6 +65,7 @@ def plot_data(timestamps, pp_timestamps, timers_and_callbacks_info):
     # 在每个 Polling Point 画一条竖线，并标注
     # for pp_time in pp_timestamps:
         # ax.axvline(x=pp_time, color='gray', linestyle='--', linewidth=0.5, label='PP' if pp_time == pp_timestamps[0] else "")
+    # print(pp_timestamps)
     for pp_time in pp_timestamps:
         ax.axvline(x=pp_time, color='orange', linestyle='--', linewidth=0.5)  # 画竖线
 
