@@ -1,19 +1,105 @@
-### Timer3 ###
-jitter = 0.6
-pattern        :   0.6   0.0   0.2   0.0   0.2   0.3   0.5   0.0   0.4   0.0   0.5   0.0   0.4   0.0   0.1   0.3   0.4   0.0   0.2   0.0
+import re
+import sys
 
-Execution times:   0.4                           0.3                           0.3                           0.3    
+class TimerInfo:
+    def __init__(self, name, period, priority, trigger, execution_times):
+        self.name = name
+        self.period = period
+        self.priority = priority
+        self.trigger = trigger
+        self.execution_times = execution_times
 
-Execution times:   0.2         0.2         0.2         0.5         0.4         0.2         0.4         0.1         0.4         0.2   
+class CallbackInfo:
+    def __init__(self, name, period, priority, trigger, execution_times):
+        self.name = name
+        self.period = period
+        self.priority = priority
+        self.trigger = trigger
+        self.execution_times = execution_times
 
+# 读取文件并解析数据
+def read_data(file_path):
+    timestamps = {}
 
-### Sub4 ###
-jitter = 1.8
-pattern        :   1.8   0.4   1.0   0.3   1.2   1.1   1.2   0.8   1.2   0.6   1.6   0.5   1.4   0.5   0.7   1.1   0.9   0.6   0.9   0.5
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
 
-Execution times:   0.2         0.2         0.2         0.5         0.4         0.2         0.4         0.1         0.4         0.2   
-Execution times:   0.4                           0.3                           0.3                           0.3    
-Execution times:   0.5   0.2   0.4   0.2   0.2   0.2   0.1   0.4   0.3   0.3   0.2   0.3   0.2   0.3   0.1   0.3   0.1   0.2   0.3   0.2
-Execution times:   0.2         0.2         0.4         0.3         0.3         0.3         0.5         0.4         0.3         0.3 
-Execution times:   0.2                           0.3                           0.3                           0.2   
-Execution times:   0.3   0.2   0.2   0.1   0.2   0.3   0.3   0.4   0.2   0.3   0.3   0.2   0.3   0.2   0.1   0.3   0.1   0.4   0.1   0.3
+    current_name = None
+    for line in lines:
+        line = line.strip()
+        if line.startswith('### '):
+            current_name = line.split('###')[1].strip()
+            timestamps[current_name] = {'execution_times': []}
+        elif current_name and 'Execution times:' in line:
+            timestamps[current_name]['execution_times'] = list(map(float, line.split(':')[1].split()))
+
+    return timestamps
+
+# 读取文件并解析周期和优先级数据
+def read_timers_and_callbacks_info(file_path):
+    timers_and_callbacks_info = {'timers': {}, 'callbacks': {}}
+
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+
+    # 遍历文件的每一行，寻找周期和优先级信息
+    for line in lines:
+        line = line.strip()
+        if line.startswith('Timer'):
+            parts = line.split(':')
+            name = parts[0].strip()
+            info = parts[1].strip().split(',')
+            period = int(info[0].split('=')[1].strip())
+            priority = int(info[1].split('=')[1].strip())
+            trigger = info[2].split('=')[1].strip()
+            timers_and_callbacks_info['timers'][name] = {
+                'period': period,
+                'priority': priority,
+                'trigger': trigger
+            }
+        elif line.startswith('Sub'):
+            parts = line.split(':')
+            name = parts[0].strip()
+            info = parts[1].strip().split(',')
+            period = int(info[0].split('=')[1].strip())
+            priority = int(info[1].split('=')[1].strip())
+            trigger = info[2].split('=')[1].strip()
+            timers_and_callbacks_info['callbacks'][name] = {
+                'period': period,
+                'priority': priority,
+                'trigger': trigger
+            }
+
+    return timers_and_callbacks_info
+
+# 将数据整合到TimerInfo和CallbackInfo对象中
+def integrate_data(timers_and_callbacks_info, timestamps):
+    integrated_data = {'timers': [], 'callbacks': []}
+
+    for timer_name, timer_info in timers_and_callbacks_info['timers'].items():
+        execution_times = timestamps.get(timer_name, {}).get('execution_times', [])
+        integrated_data['timers'].append(TimerInfo(timer_name, timer_info['period'], timer_info['priority'], timer_info['trigger'], execution_times))
+
+    for callback_name, callback_info in timers_and_callbacks_info['callbacks'].items():
+        execution_times = timestamps.get(callback_name, {}).get('execution_times', [])
+        integrated_data['callbacks'].append(CallbackInfo(callback_name, callback_info['period'], callback_info['priority'], callback_info['trigger'],execution_times))
+
+    return integrated_data
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Please provide the input file name.")
+        sys.exit(1)
+
+    inputfilename = sys.argv[1]
+    timers_and_callbacks_info = read_timers_and_callbacks_info(inputfilename)
+    timestamps = read_data(inputfilename)
+    integrated_data = integrate_data(timers_and_callbacks_info, timestamps)
+
+    print("Timers:")
+    for timer in integrated_data['timers']:
+        print(f"  {timer.name}: Period={timer.period}, Priority={timer.priority}, Trigger={timers_and_callbacks_info['timers'][timer.name]['trigger']}, Execution Times={timer.execution_times}")
+
+    print("Callbacks:")
+    for callback in integrated_data['callbacks']:
+        print(f"  {callback.name}: Period={callback.period}, Priority={callback.priority}, Trigger={timers_and_callbacks_info['callbacks'][callback.name]['trigger']}, Execution Times={callback.execution_times}")

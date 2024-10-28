@@ -421,9 +421,9 @@ plot_path = f'result/{output_file_name}.png'
 # 创建执行器实例
 executor = Executor()
 
-timer1 = Timer("Timer1", 4, 1)
-timer2 = Timer("Timer2", 5, 2)
-timer3 = Timer("Timer3", 6, 3)
+timer1 = Timer("Timer1", 3, 1)
+timer2 = Timer("Timer2", 4, 2)
+timer3 = Timer("Timer3", 5, 3)
 
 callback1 = Callback("Sub1", 4, triggers_new=False)
 callback2 = Callback("Sub2", 5, triggers_new=False)
