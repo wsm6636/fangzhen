@@ -263,8 +263,8 @@ class Timer:
         pattern = current_time - (self.index - 1) * self.period
         self.patterns.append(pattern)
 
-        execution_time = round(random.uniform(0.1, 0.5), 1)  # 每次执行时随机生成执行时间
-        # execution_time = 0.5
+        # execution_time = round(random.uniform(0.1, 0.5), 1)  # 每次执行时随机生成执行时间
+        execution_time = 0.8
 
         current_time += execution_time
         current_time = round(current_time, 2)
@@ -306,8 +306,8 @@ class Callback:
         pattern = current_time - (self.index - 1) * self.period
         self.patterns.append(pattern)
 
-        execution_time = round(random.uniform(0.1, 0.5), 1)  # 每次执行时随机生成执行时间
-        # execution_time = 0.5
+        # execution_time = round(random.uniform(0.1, 0.5), 1)  # 每次执行时随机生成执行时间
+        execution_time = 0.8
 
         current_time += execution_time
         current_time = round(current_time, 2)
