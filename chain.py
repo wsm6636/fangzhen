@@ -158,6 +158,21 @@ class Log:
 
         
 class Statistics:
+    @staticmethod
+    def calculate_theta_series(instance, all_tasks):
+        """计算特定实例的一系列理论theta值"""
+        theta_series = []
+        max_multiple = max(len(task.execution_times) for task in all_tasks)  # 假设所有任务的执行次数不超过其他任务执行时间列表的长度
+        for j in range(1, max_multiple + 1):  # 遍历所有Ti的整数倍
+            theta = 0
+            for task_h in all_tasks:
+                if task_h.priority > instance.priority:  # 只考虑优先级高于当前实例的任务
+                    n = j * instance.period // task_h.period  # 计算n使得jTi = nTh
+                    if n * task_h.period == j * instance.period:  # 检查是否精确相等
+                        if len(task_h.execution_times) >= n:  # 确保有足够的执行时间
+                            theta += task_h.execution_times[n - 1]  # 累加第n个执行时间
+            theta_series.append(theta)
+        return theta_series
     #平均值
     @staticmethod
     def calculate_average(values):
