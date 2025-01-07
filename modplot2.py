@@ -1,54 +1,39 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
-# 参数定义
-a = 12  # a >= b
-b = 10  # b 的值
-x_values = np.arange(1, 20, 1)  # x 是大于 0 的整数，从 1 到 19
+# 定义参数
+a = 10  # a的值
+b = 3   # b的值
+max_x = 50  # x的最大值
 
-# 计算 y1 的下界和上界
-k1 = np.floor((-a * x_values) / b)
-y1_lower_bounds = -k1 * b - (a - b) - a * x_values
-y1_upper_bounds = -k1 * b - a * x_values
+# 初始化列表来存储所有的点
+x_values = []
+m1_n2_values = []
+n1_m2_values = []
 
-# 计算 y2 的下界和上界
-k2 = np.floor((-a * x_values) / b)
-y2_lower_bounds = a * x_values + k2 * b
-y2_upper_bounds = y2_lower_bounds + b - 1
+# 遍历x的值
+for x in range(max_x + 1):
+    # 计算-2ax mod b
+    delta = (-2 * a * x) % b
+    print(f"For x = {x}:")
+    # 对于每个可能的m1 - n2，计算对应的n1 - m2
+    for m1_n2 in range(b):  # m1 - n2的可能值
+        n1_m2 = (m1_n2 - delta) % b  # 计算对应的n1 - m2
+        if m1_n2 >= n1_m2:  # 确保m1 - m2 >= n1 - n2
+            print(f"  m1 - n2 = {m1_n2}, n1 - m2 = {n1_m2}")
+            x_values.append(x)
+            m1_n2_values.append(m1_n2)
+            n1_m2_values.append(n1_m2)
 
-# 找到两个图形的交集
-y3_lower_bounds = np.maximum(y1_lower_bounds, y2_lower_bounds)
-y3_upper_bounds = np.minimum(y1_upper_bounds, y2_upper_bounds)
+# 绘制所有点
+plt.figure(figsize=(12, 6))
+plt.scatter(x_values, m1_n2_values, c='blue', label='m1 - n2', alpha=0.5)
+plt.scatter(x_values, n1_m2_values, c='red', label='n1 - m2', alpha=0.5,marker='x',)
 
-# 过滤出有效的交集区间
-valid_intersect = (y3_lower_bounds <= y3_upper_bounds)
-
-# 打印结果
-print("x:", x_values)
-print("y1_lower_bound:", y1_lower_bounds)
-print("y1_upper_bound:", y1_upper_bounds)
-print("y2_lower_bound:", y2_lower_bounds)
-print("y2_upper_bound:", y2_upper_bounds)
-print("y3_lower_bound:", y3_lower_bounds)
-print("y3_upper_bound:", y3_upper_bounds)
-
-# 绘制图形
-plt.figure(figsize=(10, 5))
-
-# 绘制 y1 的界限
-plt.plot(x_values, y1_lower_bounds, label='y1_lower_bound', color='blue', linestyle='-')
-plt.plot(x_values, y1_upper_bounds, label='y1_upper_bound', color='blue', linestyle='--')
-
-# 绘制 y2 的界限
-plt.plot(x_values, y2_lower_bounds, label='y2_lower_bound', color='red', linestyle='-')
-plt.plot(x_values, y2_upper_bounds, label='y2_upper_bound', color='red', linestyle='--')
-
-# 绘制 y3 的界限
-plt.fill_between(x_values[valid_intersect], y3_lower_bounds[valid_intersect], y3_upper_bounds[valid_intersect], color='green', alpha=0.5, label='y3_bounds')
-
-plt.title('Plot of y1, y2 bounds and their intersection y3')
-plt.xlabel('x')
-plt.ylabel('y bounds')
-plt.grid(True)
+# 添加图例和标签
 plt.legend()
+plt.xlabel('x')
+plt.ylabel('Values of m1 - n2 and n1 - m2')
+plt.title('All possible points for m1 - n2 and n1 - m2 with x as the horizontal axis')
+plt.grid(True)
 plt.show()

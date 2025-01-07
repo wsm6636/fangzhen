@@ -1,28 +1,89 @@
+import matplotlib.pyplot as plt
 import numpy as np
 
-# 参数定义
-a = 12  # a >= b
-b = 10  # b 的值
-x_values = np.arange(1, 20, 1)  # x 是大于 0 的整数，从 1 到 b
+# 定义参数
+T1 = 10  # T1的值
+T2 = 7   # T2的值
+max_j = 20  # j的最大值
 
-# 计算 y 的范围
-y_lower_bounds = -np.floor((-a * x_values) / b) * b - (a - b) - a * x_values
-y_upper_bounds = -np.floor((-a * x_values) / b) * b - a * x_values
+# 初始化列表来存储所有的点
+y1_values = []
+y2_values = []
+n_values = []
+j_values = []
+y1_y2_diff_values = []
 
-# 打印结果
-print("x:", x_values)
-print("y_lower_bound:", y_lower_bounds)
-print("y_upper_bound:", y_upper_bounds)
+# 打开文件用于写入
+with open('mod.txt', 'w') as file:
+    # 遍历j的值
+    for j in range(max_j + 1):
+        # 计算r
+        r = (j * T1) % T2
+        # 生成y2的值
+        for y2 in range(T2):
+            # 计算y1
+            y1 = (y2 - 2 * r) % T2
+            # 计算n的值范围
+            n_min = (j * T1 - y2) // T2
+            if n_min < 0:
+                n_min = 0
+            n_max = (j * T1 + y1 + T2) // T2
+            
+            m1 = (j * T1 + y1) % T2
+            m2 = (y2 - j * T1) % T2
+
+            # 计算y1 - y2
+            y1_y2_diff = y1 - y2
+
+            # 添加到列表中
+            y1_values.append(y1)
+            y2_values.append(y2)
+            n_values.append(n_min)
+            j_values.append(j)
+            y1_y2_diff_values.append(y1_y2_diff)
+
+            # print(f"j = {j}, y1 = {y1}, y2 = {y2}, n_min = {n_min},  y1 - y2 = {y1-y2}")
+            # 写入结果到文件
+            file.write(f"j = {j}, y1 = {y1}, y2 = {y2}, n_min = {n_min},  y1 - y2 = {y1-y2}, r = {r}, m1 = {m1}, m2={m2}\n")
+        file.write("\n")
+
+
 
 # 绘制图形
-import matplotlib.pyplot as plt
+fig, axs = plt.subplots(3, 1, figsize=(10, 12))
 
-plt.figure(figsize=(10, 5))
-plt.plot(x_values, y_lower_bounds, marker='o', linestyle='-', color='blue', label='y_lower_bound')
-plt.plot(x_values, y_upper_bounds, marker='o', linestyle='--', color='red', label='y_upper_bound')
-plt.title('Plot of y bounds = -k*b - (a - b) - ax and y bounds = -k*b - ax')
-plt.xlabel('x')
-plt.ylabel('y bounds')
-plt.grid(True)
-plt.legend()
+# 绘制y1和y2
+for j in range(max_j + 1):
+    idx = [i for i, val in enumerate(j_values) if val == j]
+    axs[0].scatter([y2_values[i] for i in idx], [y1_values[i] for i in idx], label=f'j={j}')
+
+axs[0].set_xlabel('y2')
+axs[0].set_ylabel('y1')
+axs[0].set_title('y1 vs y2 for different j')
+axs[0].legend()
+axs[0].grid(True)
+
+# 绘制n的值
+for j in range(max_j + 1):
+    idx = [i for i, val in enumerate(j_values) if val == j]
+    axs[1].scatter([j_values[i] for i in idx], [n_values[i] for i in idx], label=f'j={j}')
+
+axs[1].set_xlabel('j')
+axs[1].set_ylabel('n')
+axs[1].set_title('n vs j for different y2')
+axs[1].legend()
+axs[1].grid(True)
+
+# 绘制y1-y2的值
+for j in range(max_j + 1):
+    idx = [i for i, val in enumerate(j_values) if val == j]
+    axs[2].scatter([j_values[i] for i in idx], [y1_y2_diff_values[i] for i in idx], label=f'j={j}')
+
+axs[2].set_xlabel('y1_y2')
+axs[2].set_ylabel('n')
+axs[2].set_title('n vs y1_y2 for different y2')
+axs[2].legend()
+axs[2].grid(True)
+
+plt.tight_layout()
 plt.show()

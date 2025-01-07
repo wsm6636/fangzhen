@@ -1,0 +1,204 @@
+j = 0, k = 0, y1 = 0, y2 = 0, n_min = 0, n_max = 1, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 0, k = 0, y1 = 1, y2 = 1, n_min = 0, n_max = 1, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 0, k = 0, y1 = 2, y2 = 2, n_min = 0, n_max = 1, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 1, k = 2, y1 = 2, y2 = 0, n_min = 1, n_max = 3, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 1, k = 1, y1 = 0, y2 = 1, n_min = 1, n_max = 2, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 1, k = 1, y1 = 1, y2 = 2, n_min = 1, n_max = 3, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 2, k = 1, y1 = 1, y2 = 0, n_min = 3, n_max = 4, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 2, k = 1, y1 = 2, y2 = 1, n_min = 3, n_max = 5, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 2, k = 0, y1 = 0, y2 = 2, n_min = 2, n_max = 4, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 3, k = 0, y1 = 0, y2 = 0, n_min = 5, n_max = 6, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 3, k = 0, y1 = 1, y2 = 1, n_min = 4, n_max = 6, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 3, k = 0, y1 = 2, y2 = 2, n_min = 4, n_max = 6, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 4, k = 2, y1 = 2, y2 = 0, n_min = 6, n_max = 8, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 4, k = 1, y1 = 0, y2 = 1, n_min = 6, n_max = 7, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 4, k = 1, y1 = 1, y2 = 2, n_min = 6, n_max = 8, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 5, k = 1, y1 = 1, y2 = 0, n_min = 8, n_max = 9, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 5, k = 1, y1 = 2, y2 = 1, n_min = 8, n_max = 10, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 5, k = 0, y1 = 0, y2 = 2, n_min = 7, n_max = 9, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 6, k = 0, y1 = 0, y2 = 0, n_min = 10, n_max = 11, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 6, k = 0, y1 = 1, y2 = 1, n_min = 9, n_max = 11, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 6, k = 0, y1 = 2, y2 = 2, n_min = 9, n_max = 11, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 7, k = 2, y1 = 2, y2 = 0, n_min = 11, n_max = 13, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 7, k = 1, y1 = 0, y2 = 1, n_min = 11, n_max = 12, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 7, k = 1, y1 = 1, y2 = 2, n_min = 11, n_max = 13, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 8, k = 1, y1 = 1, y2 = 0, n_min = 13, n_max = 14, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 8, k = 1, y1 = 2, y2 = 1, n_min = 13, n_max = 15, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 8, k = 0, y1 = 0, y2 = 2, n_min = 12, n_max = 14, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 9, k = 0, y1 = 0, y2 = 0, n_min = 15, n_max = 16, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 9, k = 0, y1 = 1, y2 = 1, n_min = 14, n_max = 16, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 9, k = 0, y1 = 2, y2 = 2, n_min = 14, n_max = 16, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 10, k = 2, y1 = 2, y2 = 0, n_min = 16, n_max = 18, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 10, k = 1, y1 = 0, y2 = 1, n_min = 16, n_max = 17, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 10, k = 1, y1 = 1, y2 = 2, n_min = 16, n_max = 18, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 11, k = 1, y1 = 1, y2 = 0, n_min = 18, n_max = 19, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 11, k = 1, y1 = 2, y2 = 1, n_min = 18, n_max = 20, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 11, k = 0, y1 = 0, y2 = 2, n_min = 17, n_max = 19, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 12, k = 0, y1 = 0, y2 = 0, n_min = 20, n_max = 21, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 12, k = 0, y1 = 1, y2 = 1, n_min = 19, n_max = 21, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 12, k = 0, y1 = 2, y2 = 2, n_min = 19, n_max = 21, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 13, k = 2, y1 = 2, y2 = 0, n_min = 21, n_max = 23, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 13, k = 1, y1 = 0, y2 = 1, n_min = 21, n_max = 22, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 13, k = 1, y1 = 1, y2 = 2, n_min = 21, n_max = 23, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 14, k = 1, y1 = 1, y2 = 0, n_min = 23, n_max = 24, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 14, k = 1, y1 = 2, y2 = 1, n_min = 23, n_max = 25, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 14, k = 0, y1 = 0, y2 = 2, n_min = 22, n_max = 24, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 15, k = 0, y1 = 0, y2 = 0, n_min = 25, n_max = 26, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 15, k = 0, y1 = 1, y2 = 1, n_min = 24, n_max = 26, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 15, k = 0, y1 = 2, y2 = 2, n_min = 24, n_max = 26, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 16, k = 2, y1 = 2, y2 = 0, n_min = 26, n_max = 28, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 16, k = 1, y1 = 0, y2 = 1, n_min = 26, n_max = 27, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 16, k = 1, y1 = 1, y2 = 2, n_min = 26, n_max = 28, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 17, k = 1, y1 = 1, y2 = 0, n_min = 28, n_max = 29, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 17, k = 1, y1 = 2, y2 = 1, n_min = 28, n_max = 30, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 17, k = 0, y1 = 0, y2 = 2, n_min = 27, n_max = 29, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 18, k = 0, y1 = 0, y2 = 0, n_min = 30, n_max = 31, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 18, k = 0, y1 = 1, y2 = 1, n_min = 29, n_max = 31, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 18, k = 0, y1 = 2, y2 = 2, n_min = 29, n_max = 31, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 19, k = 2, y1 = 2, y2 = 0, n_min = 31, n_max = 33, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 19, k = 1, y1 = 0, y2 = 1, n_min = 31, n_max = 32, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 19, k = 1, y1 = 1, y2 = 2, n_min = 31, n_max = 33, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 20, k = 1, y1 = 1, y2 = 0, n_min = 33, n_max = 34, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 20, k = 1, y1 = 2, y2 = 1, n_min = 33, n_max = 35, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 20, k = 0, y1 = 0, y2 = 2, n_min = 32, n_max = 34, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 21, k = 0, y1 = 0, y2 = 0, n_min = 35, n_max = 36, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 21, k = 0, y1 = 1, y2 = 1, n_min = 34, n_max = 36, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 21, k = 0, y1 = 2, y2 = 2, n_min = 34, n_max = 36, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 22, k = 2, y1 = 2, y2 = 0, n_min = 36, n_max = 38, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 22, k = 1, y1 = 0, y2 = 1, n_min = 36, n_max = 37, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 22, k = 1, y1 = 1, y2 = 2, n_min = 36, n_max = 38, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 23, k = 1, y1 = 1, y2 = 0, n_min = 38, n_max = 39, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 23, k = 1, y1 = 2, y2 = 1, n_min = 38, n_max = 40, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 23, k = 0, y1 = 0, y2 = 2, n_min = 37, n_max = 39, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 24, k = 0, y1 = 0, y2 = 0, n_min = 40, n_max = 41, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 24, k = 0, y1 = 1, y2 = 1, n_min = 39, n_max = 41, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 24, k = 0, y1 = 2, y2 = 2, n_min = 39, n_max = 41, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 25, k = 2, y1 = 2, y2 = 0, n_min = 41, n_max = 43, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 25, k = 1, y1 = 0, y2 = 1, n_min = 41, n_max = 42, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 25, k = 1, y1 = 1, y2 = 2, n_min = 41, n_max = 43, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 26, k = 1, y1 = 1, y2 = 0, n_min = 43, n_max = 44, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 26, k = 1, y1 = 2, y2 = 1, n_min = 43, n_max = 45, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 26, k = 0, y1 = 0, y2 = 2, n_min = 42, n_max = 44, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 27, k = 0, y1 = 0, y2 = 0, n_min = 45, n_max = 46, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 27, k = 0, y1 = 1, y2 = 1, n_min = 44, n_max = 46, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 27, k = 0, y1 = 2, y2 = 2, n_min = 44, n_max = 46, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 28, k = 2, y1 = 2, y2 = 0, n_min = 46, n_max = 48, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 28, k = 1, y1 = 0, y2 = 1, n_min = 46, n_max = 47, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 28, k = 1, y1 = 1, y2 = 2, n_min = 46, n_max = 48, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 29, k = 1, y1 = 1, y2 = 0, n_min = 48, n_max = 49, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 29, k = 1, y1 = 2, y2 = 1, n_min = 48, n_max = 50, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 29, k = 0, y1 = 0, y2 = 2, n_min = 47, n_max = 49, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 30, k = 0, y1 = 0, y2 = 0, n_min = 50, n_max = 51, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 30, k = 0, y1 = 1, y2 = 1, n_min = 49, n_max = 51, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 30, k = 0, y1 = 2, y2 = 2, n_min = 49, n_max = 51, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 31, k = 2, y1 = 2, y2 = 0, n_min = 51, n_max = 53, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 31, k = 1, y1 = 0, y2 = 1, n_min = 51, n_max = 52, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 31, k = 1, y1 = 1, y2 = 2, n_min = 51, n_max = 53, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 32, k = 1, y1 = 1, y2 = 0, n_min = 53, n_max = 54, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 32, k = 1, y1 = 2, y2 = 1, n_min = 53, n_max = 55, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 32, k = 0, y1 = 0, y2 = 2, n_min = 52, n_max = 54, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 33, k = 0, y1 = 0, y2 = 0, n_min = 55, n_max = 56, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 33, k = 0, y1 = 1, y2 = 1, n_min = 54, n_max = 56, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 33, k = 0, y1 = 2, y2 = 2, n_min = 54, n_max = 56, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 34, k = 2, y1 = 2, y2 = 0, n_min = 56, n_max = 58, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 34, k = 1, y1 = 0, y2 = 1, n_min = 56, n_max = 57, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 34, k = 1, y1 = 1, y2 = 2, n_min = 56, n_max = 58, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 35, k = 1, y1 = 1, y2 = 0, n_min = 58, n_max = 59, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 35, k = 1, y1 = 2, y2 = 1, n_min = 58, n_max = 60, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 35, k = 0, y1 = 0, y2 = 2, n_min = 57, n_max = 59, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 36, k = 0, y1 = 0, y2 = 0, n_min = 60, n_max = 61, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 36, k = 0, y1 = 1, y2 = 1, n_min = 59, n_max = 61, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 36, k = 0, y1 = 2, y2 = 2, n_min = 59, n_max = 61, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 37, k = 2, y1 = 2, y2 = 0, n_min = 61, n_max = 63, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 37, k = 1, y1 = 0, y2 = 1, n_min = 61, n_max = 62, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 37, k = 1, y1 = 1, y2 = 2, n_min = 61, n_max = 63, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 38, k = 1, y1 = 1, y2 = 0, n_min = 63, n_max = 64, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 38, k = 1, y1 = 2, y2 = 1, n_min = 63, n_max = 65, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 38, k = 0, y1 = 0, y2 = 2, n_min = 62, n_max = 64, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 39, k = 0, y1 = 0, y2 = 0, n_min = 65, n_max = 66, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 39, k = 0, y1 = 1, y2 = 1, n_min = 64, n_max = 66, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 39, k = 0, y1 = 2, y2 = 2, n_min = 64, n_max = 66, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 40, k = 2, y1 = 2, y2 = 0, n_min = 66, n_max = 68, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 40, k = 1, y1 = 0, y2 = 1, n_min = 66, n_max = 67, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 40, k = 1, y1 = 1, y2 = 2, n_min = 66, n_max = 68, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 41, k = 1, y1 = 1, y2 = 0, n_min = 68, n_max = 69, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 41, k = 1, y1 = 2, y2 = 1, n_min = 68, n_max = 70, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 41, k = 0, y1 = 0, y2 = 2, n_min = 67, n_max = 69, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 42, k = 0, y1 = 0, y2 = 0, n_min = 70, n_max = 71, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 42, k = 0, y1 = 1, y2 = 1, n_min = 69, n_max = 71, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 42, k = 0, y1 = 2, y2 = 2, n_min = 69, n_max = 71, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 43, k = 2, y1 = 2, y2 = 0, n_min = 71, n_max = 73, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 43, k = 1, y1 = 0, y2 = 1, n_min = 71, n_max = 72, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 43, k = 1, y1 = 1, y2 = 2, n_min = 71, n_max = 73, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 44, k = 1, y1 = 1, y2 = 0, n_min = 73, n_max = 74, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 44, k = 1, y1 = 2, y2 = 1, n_min = 73, n_max = 75, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 44, k = 0, y1 = 0, y2 = 2, n_min = 72, n_max = 74, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 45, k = 0, y1 = 0, y2 = 0, n_min = 75, n_max = 76, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 45, k = 0, y1 = 1, y2 = 1, n_min = 74, n_max = 76, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 45, k = 0, y1 = 2, y2 = 2, n_min = 74, n_max = 76, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 46, k = 2, y1 = 2, y2 = 0, n_min = 76, n_max = 78, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 46, k = 1, y1 = 0, y2 = 1, n_min = 76, n_max = 77, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 46, k = 1, y1 = 1, y2 = 2, n_min = 76, n_max = 78, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 47, k = 1, y1 = 1, y2 = 0, n_min = 78, n_max = 79, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 47, k = 1, y1 = 2, y2 = 1, n_min = 78, n_max = 80, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 47, k = 0, y1 = 0, y2 = 2, n_min = 77, n_max = 79, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
+j = 48, k = 0, y1 = 0, y2 = 0, n_min = 80, n_max = 81, y1 - y2 = 0, r = 0, rk = None, m1 = 0, m2=0
+j = 48, k = 0, y1 = 1, y2 = 1, n_min = 79, n_max = 81, y1 - y2 = 0, r = 0, rk = None, m1 = 1, m2=1
+j = 48, k = 0, y1 = 2, y2 = 2, n_min = 79, n_max = 81, y1 - y2 = 0, r = 0, rk = None, m1 = 2, m2=2
+
+j = 49, k = 2, y1 = 2, y2 = 0, n_min = 81, n_max = 83, y1 - y2 = 2, r = 2, rk = 0, m1 = 1, m2=1
+j = 49, k = 1, y1 = 0, y2 = 1, n_min = 81, n_max = 82, y1 - y2 = -1, r = 2, rk = 1, m1 = 2, m2=2
+j = 49, k = 1, y1 = 1, y2 = 2, n_min = 81, n_max = 83, y1 - y2 = -1, r = 2, rk = 1, m1 = 0, m2=0
+
+j = 50, k = 1, y1 = 1, y2 = 0, n_min = 83, n_max = 84, y1 - y2 = 1, r = 1, rk = 0, m1 = 2, m2=2
+j = 50, k = 1, y1 = 2, y2 = 1, n_min = 83, n_max = 85, y1 - y2 = 1, r = 1, rk = 0, m1 = 0, m2=0
+j = 50, k = 0, y1 = 0, y2 = 2, n_min = 82, n_max = 84, y1 - y2 = -2, r = 1, rk = 0, m1 = 1, m2=1
+
